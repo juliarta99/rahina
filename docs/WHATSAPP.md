@@ -1,0 +1,183 @@
+# WHATSAPP.md — Rahina Pagi via WhatsApp (Fonnte)
+
+Fitur: pengguna yang mendaftarkan nomor WhatsApp menerima **ringkasan harian pukul 06.00 WITA** (bagian umum + bagian pribadi berdasarkan otonan), dan bisa **membalas pesan untuk bertanya** ke Tanya Wariga.
+
+Penyedia: **Fonnte** (gateway WhatsApp). Semua akses ke Fonnte dibungkus interface `MessagingGateway`, sehingga bisa diganti ke WhatsApp Cloud API resmi tanpa mengubah logika bisnis.
+
+---
+
+## 1. Keputusan Utama
+
+| Keputusan | Pilihan | Alasan |
+|---|---|---|
+| Penyedia | Fonnte (paket berbayar) | Setup cepat, tanpa verifikasi bisnis Meta, pesan bebas format. Paket gratis tidak dipakai karena ada pembatasan konten dan device sering terputus |
+| Nomor pengirim | **Nomor khusus Rahina** (bukan nomor pribadi anggota tim) | Jika terkena pembatasan, nomor pribadi tidak terdampak |
+| Verifikasi nomor | Pengguna **mengirim pesan duluan** ("DAFTAR <kode>") lewat tautan `wa.me` | Membuktikan kepemilikan nomor, dan percakapan diawali pengguna sehingga menurunkan risiko dianggap spam |
+| Bagian pribadi | Dihitung deterministik, **tanpa LLM** | Tanggal lahir tidak pernah dikirim ke AI |
+| Abstraksi | `MessagingGateway` → `FonnteGateway` (sekarang), `CloudApiGateway` (nanti) | Modular; rencana migrasi untuk produksi |
+
+### Risiko yang diakui (masuk *Known Limitations* & disclosure)
+Fonnte bukan WhatsApp Business Platform resmi Meta. Nomor pengirim berisiko dibatasi atau diblokir oleh WhatsApp, terutama jika volume tinggi atau banyak dilaporkan sebagai spam. Mitigasi ada di §5. Untuk skala produksi direncanakan migrasi ke Cloud API resmi.
+
+---
+
+## 2. Integrasi Fonnte
+
+### 2.1 Kirim pesan
+```
+POST https://api.fonnte.com/send
+Header: Authorization: <FONNTE_TOKEN>
+Body (form/JSON):
+  target      = 62812xxxxxxx
+  message     = teks (boleh multi-baris, format WA *tebal* _miring_)
+  typing      = true            (indikator mengetik, opsional)
+  inboxid     = <id>            (opsional, membalas pesan tertentu)
+```
+- Penjadwalan pengiriman dilakukan oleh **scheduler Laravel**, bukan fitur jadwal Fonnte, supaya waktu (WITA) dan retry terkendali di server.
+- Simpan `id` dari respons sebagai `provider_message_id`.
+
+### 2.2 Webhook pesan masuk
+- Atur URL webhook di dashboard Fonnte (Device → Edit) dan **aktifkan autoread** (wajib agar webhook berjalan; bisa pakai *silent autoread*).
+- Fonnte mengirim **POST** dengan field antara lain `device`, `sender`, `message`, timestamp, dan `inboxid`.
+- Endpoint harus **membalas HTTP 200 secepatnya**. Proses berat (agent AI) dijalankan di **queue job**, bukan di request webhook. Fonnte melakukan retry bila gagal, jadi handler harus **idempoten**.
+
+### 2.3 Keamanan webhook
+Fonnte tidak menyediakan tanda tangan (signature) webhook, jadi:
+1. URL webhook memuat token rahasia: `/webhooks/fonnte/{FONNTE_WEBHOOK_SECRET}`.
+2. Tolak jika `device` ≠ `FONNTE_DEVICE_NUMBER`.
+3. Aktifkan **IP whitelist** di Fonnte untuk request `send` (hanya IP server Rahina).
+4. Token Fonnte hanya di `.env`, tidak pernah di repo.
+
+---
+
+## 3. Alur
+
+### 3.1 Pendaftaran (opt-in)
+```
+Web: pilih persona, (opsional) tanggal lahir, centang persetujuan:
+  [ ] Saya setuju menerima ringkasan harian Rahina via WhatsApp pukul 06.00 WITA
+  [ ] Saya setuju tanggal lahir dipakai untuk menghitung otonan (opsional)
+→ Server membuat kode 6 karakter (15 menit)
+→ Tombol "Hubungkan WhatsApp" → https://wa.me/<FONNTE_DEVICE_NUMBER>?text=DAFTAR%20<KODE>
+→ Webhook menerima "DAFTAR <KODE>" dari sender X → cocok → simpan langganan (nomor terenkripsi)
+→ Balas: konfirmasi + cara berhenti + anjuran menyimpan nomor Rahina
+```
+
+### 3.2 Pengiriman pagi
+```
+05:30 WITA  brief:generate       → daily_briefs 4 persona
+05:45 WITA  wa:prepare-morning   → susun pesan tiap langganan aktif
+              umum   = daily_briefs[persona]
+              pribadi = PersonalNoteBuilder (tanpa LLM)
+            → dispatch SendMorningBrief dengan jeda bertahap mulai 06:00
+06:00–06:30 kirim berurutan, jeda acak 4–12 detik antar pesan
+```
+Kapasitas kasar: 30 menit ÷ ±8 detik ≈ 225 pesan per nomor. Lebih dari itu → perpanjang jendela atau tambah device.
+
+### 3.3 Tanya lewat balasan
+```
+Pesan bebas → webhook → simpan → 200 OK
+→ Job AnswerWhatsAppQuestion → kirim "typing" → AskWarigaAction (agent yang sama dengan web) → OutputGuard
+→ Balas maks 5 tanggal + tautan detail
+```
+Kata kunci: `DAFTAR <kode>`, `BERHENTI`/`STOP`, `MULAI`, `PROFIL`, `BANTUAN`, `HAPUS DATA`.
+
+---
+
+## 4. Format Pesan
+
+```
+*Rahina · {Hari}, {tanggal}*
+{Saptawara} {Pancawara} · Wuku {x} · {Sasih}
+
+*Hari ini secara umum*
+- {poin 1}
+- {poin 2}
+- {poin 3}
+
+*Untuk Anda*
+- {catatan pribadi}
+
+Detail: {url}/hari/{yyyy-mm-dd}
+_Menurut perhitungan wariga. Untuk upacara besar, konsultasikan dengan sulinggih atau pemangku._
+Balas pesan ini untuk bertanya hari baik. Ketik BERHENTI untuk berhenti.
+```
+- Tanpa emoji. Isi poin diambil dari data tervalidasi; teks di atas hanya format.
+- Variasikan baris pembuka/penutup dari 3–4 versi agar pesan tidak identik 100% setiap hari.
+
+### Bagian pribadi (`PersonalNoteBuilder`, tanpa LLM)
+Ambil 1–2 yang berlaku: (1) hari ini otonan, (2) otonan ≤ 14 hari lagi, (3) rahinan besar ≤ 7 hari lagi, (4) dewasa baik untuk kategori persona hari ini. Tidak ada yang berlaku → bagian ini dihilangkan.
+Tidak memuat ramalan watak/nasib kecuali aturannya bersumber dan tervalidasi.
+
+---
+
+## 5. Mitigasi Risiko Blokir
+
+1. Kirim **hanya** ke nomor yang sudah opt-in lewat "DAFTAR" (mereka yang memulai percakapan).
+2. Minta pengguna **menyimpan nomor Rahina** di pesan konfirmasi.
+3. Jeda acak antar pesan, kirim bertahap, tanpa blast serentak.
+4. **Pemanasan nomor**: minggu pertama hanya tim & penguji (≤ 20 nomor), naikkan bertahap.
+5. Opt-out seketika; nomor yang 3× gagal beruntun dinonaktifkan.
+6. Satu tautan per pesan, tanpa tautan pendek (shortlink).
+7. Pantau status device (cek berkala via API/dashboard); jika terputus → alert ke admin dan pengiriman ditunda, bukan dibuang.
+8. Fitur web tetap berfungsi penuh tanpa WhatsApp.
+
+---
+
+## 6. Data & Privasi (UU PDP No. 27/2022)
+
+- Nomor WA disimpan terenkripsi (`encrypted` cast) + `phone_hash` (HMAC) untuk pencarian.
+- Tanggal lahir opsional & terenkripsi; sistem cukup memakai `otonan_*`.
+- Nomor, nama, dan tanggal lahir **tidak** dikirim ke Gemini. Pertanyaan balasan dikirim tanpa identitas.
+- **Pihak ketiga:** isi pesan melewati server Fonnte. Ini dijelaskan di halaman `/privasi` dan di formulir persetujuan.
+- `HAPUS DATA` → hapus langganan & log terkait.
+
+---
+
+## 7. Komponen Kode
+
+```
+app/Messaging/
+  MessagingGateway.php        # interface: send(Outgoing): SendResult; typing(to, seconds); parseInbound(Request): Inbound
+  Gateways/FonnteGateway.php  # implementasi Fonnte (satu-satunya tempat HTTP ke api.fonnte.com)
+  Gateways/FakeGateway.php    # untuk test & lokal
+  InboundRouter.php           # DAFTAR / BERHENTI / MULAI / BANTUAN / HAPUS DATA / pertanyaan
+  MessageFormatter.php        # format pesan pagi & jawaban
+  PersonalNoteBuilder.php
+app/Http/Controllers/Webhooks/FonnteWebhookController.php   # validasi secret & device, simpan, 200 OK, dispatch job
+app/Jobs/SendMorningBrief.php        # retry 3× backoff
+app/Jobs/AnswerWhatsAppQuestion.php
+app/Console/Commands/WaPrepareMorning.php
+config/messaging.php                 # driver: fonnte|cloud_api|fake
+```
+
+Env:
+```
+MESSAGING_DRIVER=fonnte
+FONNTE_TOKEN=
+FONNTE_DEVICE_NUMBER=
+FONNTE_WEBHOOK_SECRET=
+WA_SEND_TIME=06:00
+WA_SEND_WINDOW_MINUTES=30
+WA_DELAY_MIN_SECONDS=4
+WA_DELAY_MAX_SECONDS=12
+```
+
+---
+
+## 8. Penanganan Error
+
+| Kejadian | Perilaku |
+|---|---|
+| Brief LLM gagal | Fallback template non-AI, tetap terkirim |
+| Fonnte error / device terputus | Retry 3× (1, 5, 15 menit); masih gagal → tunda, alert admin |
+| Webhook dobel (retry Fonnte) | Idempoten via hash (`sender` + timestamp + isi) / `inboxid` |
+| Agent lambat | Kirim indikator typing; balasan dari queue |
+| Pertanyaan di luar topik | Balasan sopan + menu bantuan |
+
+---
+
+## 9. Testing
+
+- `FakeGateway` untuk semua test; tidak ada panggilan ke Fonnte di CI.
+- Test: router kata kunci, idempotensi webhook, secret/device salah → 403, formatter (panjang, tanpa emoji), PersonalNoteBuilder (otonan hari ini / 14 hari lagi / tidak ada).
