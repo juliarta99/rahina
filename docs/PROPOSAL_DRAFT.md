@@ -51,10 +51,10 @@ Masalahnya, informasi harian tersebut:
 
 | Bagian | Model / metode | Input → Output | Alasan AI diperlukan |
 |---|---|---|---|
-| Ringkasan harian | Gemini Flash, structured output | data dewasa hari itu + persona → 3–4 poin JSON | Mengubah daftar istilah yang bertentangan menjadi bahasa awam per kebutuhan |
-| Pemetaan aktivitas | Gemini embedding + pencarian hybrid (pgvector + trigram), LLM fallback | "nanam singkong" → kategori `pertanian.umbi` | Kategori wariga sangat spesifik; pengguna memakai bahasa sehari-hari |
-| Tanya Wariga | Gemini agent dengan **function calling** (5 tools) | pertanyaan bebas → daftar tanggal + alasan + sumber | Pertanyaan alami perlu diubah menjadi kueri terstruktur multi-langkah |
-| Penjelas konflik | Gemini + RAG catatan pengetahuan | dewasa pendukung/penghalang + aturan prioritas → penjelasan | Butuh penalaran dan penjelasan berbasis sumber |
+| Ringkasan harian | `gemini-3.1-flash-lite`, structured output | data dewasa hari itu + persona → 3–4 poin JSON | Mengubah daftar istilah yang bertentangan menjadi bahasa awam per kebutuhan |
+| Pemetaan aktivitas | Pencarian trigram/full-text Postgres + klasifikasi `gemini-3.1-flash-lite` (output enum) | "nanam singkong" → kategori `pertanian.umbi` | Kategori wariga sangat spesifik; pengguna memakai bahasa sehari-hari |
+| Tanya Wariga | `gemini-3.1-flash-lite` agent dengan **function calling** (5 tools) | pertanyaan bebas → daftar tanggal + alasan + sumber | Pertanyaan alami perlu diubah menjadi kueri terstruktur multi-langkah |
+| Penjelas konflik | `gemini-3.1-flash-lite` + retrieval catatan pengetahuan (full-text) | dewasa pendukung/penghalang + aturan prioritas → penjelasan | Butuh penalaran dan penjelasan berbasis sumber |
 
 **Batasan & pengaman**
 - LLM **tidak menghitung** tanggal. Semua tanggal berasal dari tools yang membaca database hasil perhitungan.
@@ -84,7 +84,7 @@ Masalahnya, informasi harian tersebut:
 
 ```
 Pengguna → Frontend (Inertia + React) → Backend (Laravel 12)
-   → Domain Wariga (deterministik) ↔ PostgreSQL + pgvector
+   → Domain Wariga (deterministik) ↔ Supabase (PostgreSQL)
    → Lapisan AI: AgentRunner → Tools → OutputGuard → Gemini API
    → Hasil: ringkasan / tanggal + alasan + sumber
 Pre-compute: Node (balinese-date-js) → JSONL → import ke DB → rule engine dewasa
@@ -123,7 +123,7 @@ Inti inovasinya: **dari kalender yang dibaca menjadi asisten yang menjawab dan m
 - Rekomendasi bersifat informatif, bukan pengganti petunjuk sulinggih.
 
 ## 9. Technology Disclosure
-Ringkasan dari `docs/AI_DISCLOSURE.md`: Laravel 12, Inertia/React/TS, Tailwind, PostgreSQL + pgvector, balinese-date-js (Apache-2.0), Gemini API (text + embedding), hosting [TODO], AI coding assistant: Claude Code. Sumber pengetahuan: buku wariga (Ardhana 2005; Yayasan Satya Hindu Dharma 1992; Bangli 2010; Gina 1997), lontar digital (Wikimedia Commons, Balinese Digital Library), validasi narasumber [TODO].
+Ringkasan dari `docs/AI_DISCLOSURE.md`: Laravel 12, Inertia/React/TS, Tailwind, Supabase (PostgreSQL), balinese-date-js (Apache-2.0), Gemini API (`gemini-3.1-flash-lite`), hosting [TODO], AI coding assistant: Claude Code. Sumber pengetahuan: buku wariga (Ardhana 2005; Yayasan Satya Hindu Dharma 1992; Bangli 2010; Gina 1997), lontar digital (Wikimedia Commons, Balinese Digital Library), validasi narasumber [TODO].
 
 ## 10. Submission Links
 - GitHub: [TODO]

@@ -7,17 +7,19 @@ Dokumen ini menjelaskan **di mana AI dipakai, kenapa diperlukan, input-output, d
 | # | Fitur | Teknik AI | Input → Output | Kenapa perlu AI |
 |---|---|---|---|---|
 | A | Rahina Ini | LLM summarization (structured output) | data dewasa hari itu + persona → 3–4 poin JSON | Data mentah 10–20 istilah, saling bertentangan, berbahasa teknis |
-| B | Pemetaan aktivitas | Embedding + pencarian hybrid; LLM sebagai fallback klasifikasi | "nanam singkong" → `pertanian.umbi` | Kategori wariga spesifik; user memakai bahasa sehari-hari |
+| B | Pemetaan aktivitas | Pencarian trigram Postgres + klasifikasi LLM (output enum) | "nanam singkong" → `pertanian.umbi` | Kategori wariga spesifik; user memakai bahasa sehari-hari |
 | C | Tanya Wariga | LLM agent + function calling | pertanyaan bebas → tanggal + alasan + sumber | Pertanyaan alami harus diubah menjadi kueri terstruktur multi-langkah |
-| D | Penjelas konflik | LLM + RAG (`knowledge_notes`) | daftar dewasa pendukung/penghalang + aturan prioritas → penjelasan | Butuh penalaran dan bahasa awam; aturan prioritas dari buku |
+| D | Penjelas konflik | LLM + retrieval full-text (`knowledge_notes`) | daftar dewasa pendukung/penghalang + aturan prioritas → penjelasan | Butuh penalaran dan bahasa awam; aturan prioritas dari buku |
 
 **Prinsip:** LLM = penerjemah & penjelas. **Perhitungan = kode deterministik.**
 
 ## 2. Model
 
-- Teks & agent: Gemini Flash (nama di `GEMINI_TEXT_MODEL`), `temperature` 0.2, `responseMimeType: application/json` + `responseSchema`.
-- Embedding: Gemini embedding (`GEMINI_EMBED_MODEL`), `outputDimensionality: 768`.
-- Alasan memilih: dukungan bahasa Indonesia baik, function calling native, ada free tier untuk masa penjurian, latensi rendah.
+- **Satu model untuk semua fitur: `gemini-3.1-flash-lite`** (dari `GEMINI_MODEL`). `temperature` 0.2, `responseMimeType: application/json` + schema.
+- Model ini mendukung function calling dan structured output JSON, cocok untuk tugas klasifikasi, ekstraksi, dan agent ringan.
+- **Tanpa model embedding.** Pencarian alias aktivitas & catatan pengetahuan memakai `pg_trgm` + full-text search Postgres. Korpusnya kecil (ratusan–ribuan baris), sehingga pencarian leksikal cukup, dan kekurangannya ditutup oleh klasifikasi LLM.
+- Alasan memilih: latensi rendah, biaya rendah, satu API key, function calling native.
+- Karena model "lite", tugas dibuat **sempit dan terstruktur**: prompt pendek, schema ketat, maksimal 4 langkah agent, dan semua perhitungan tetap di kode.
 
 ## 3. Fitur A — Rahina Ini
 
@@ -47,9 +49,11 @@ Scheduler 00:05 WITA → BuildDailyBriefAction(date, persona) ×4
 
 ## 4. Fitur B — Pemetaan Aktivitas
 
-1. Normalisasi (lowercase, hapus kata umum "hari baik", "untuk").
-2. Pencarian hybrid `activity_aliases` (lihat `DATABASE_SCHEMA.md` §5).
-3. Skor tertinggi ≥ 0.80 → langsung dipakai. Skor 0.55–0.80 atau selisih top-2 < 0.05 → **tanya balik** dengan pilihan kategori. Skor < 0.55 → LLM klasifikasi ke daftar `code` yang tersedia (enum di schema), lalu tetap tanya balik bila `confidence` < 0.7.
+1. Normalisasi (lowercase, hapus kata umum "hari baik", "untuk", "kapan").
+2. Pencarian trigram `activity_aliases` (lihat `DATABASE_SCHEMA.md` §5).
+3. Skor tertinggi ≥ 0.60 dan selisih dengan peringkat 2 ≥ 0.10 → langsung dipakai.
+4. Selain itu → **LLM klasifikasi**: kirim teks + daftar `code` + nama kategori (enum di schema). Output `{code, confidence}`.
+5. `confidence` < 0.7 atau kategori upacara besar yang ambigu → **tanya balik** dengan 2–3 pilihan kategori.
 4. Frasa baru yang dikonfirmasi user disimpan sebagai kandidat alias (perlu disetujui admin).
 
 ## 5. Fitur C — Tanya Wariga (agent)
@@ -105,7 +109,7 @@ Kode guard harus mudah ditunjukkan ke juri: `app/AI/OutputGuard.php`.
 
 ## 7. Fitur D — Penjelas Konflik
 
-Input: tanggal + kategori → `support[]`, `block[]`, `dewasa_precedence`, `knowledge_notes` relevan (top-3 via vector).
+Input: tanggal + kategori → `support[]`, `block[]`, `dewasa_precedence`, `knowledge_notes` relevan (top-3 via full-text / topik).
 Output: `{ "conclusion": "ayu|ala|campur", "explanation": "≤ 3 kalimat", "precedence_source_id": 4 }`.
 Jika `dewasa_precedence` belum terisi dari sumber tervalidasi → `conclusion = "campur"` + kalimat tetap "Perhitungan menunjukkan pertimbangan yang berbeda; konsultasikan dengan pemangku".
 

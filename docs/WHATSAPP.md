@@ -23,9 +23,16 @@ Fonnte bukan WhatsApp Business Platform resmi Meta. Nomor pengirim berisiko diba
 
 ## 2. Integrasi Fonnte
 
+Semua endpoint dibangun dari `FONNTE_API_URL` (default `https://api.fonnte.com`) dan memakai header `Authorization: <FONNTE_TOKEN>` (token **device**, bukan token akun).
+
+| Endpoint | Fungsi di Rahina |
+|---|---|
+| `POST {FONNTE_API_URL}/send` | Kirim pesan pagi & jawaban |
+| `POST {FONNTE_API_URL}/device` | Ambil nomor device, status (`connect`/`disconnect`), dan kuota. **Di-cache 1 jam** karena pemanggilannya dibatasi Fonnte |
+
 ### 2.1 Kirim pesan
 ```
-POST https://api.fonnte.com/send
+POST {FONNTE_API_URL}/send
 Header: Authorization: <FONNTE_TOKEN>
 Body (form/JSON):
   target      = 62812xxxxxxx
@@ -41,12 +48,20 @@ Body (form/JSON):
 - Fonnte mengirim **POST** dengan field antara lain `device`, `sender`, `message`, timestamp, dan `inboxid`.
 - Endpoint harus **membalas HTTP 200 secepatnya**. Proses berat (agent AI) dijalankan di **queue job**, bukan di request webhook. Fonnte melakukan retry bila gagal, jadi handler harus **idempoten**.
 
-### 2.3 Keamanan webhook
+### 2.3 Nomor device (tanpa env tambahan)
+Nomor WhatsApp Rahina **tidak ditulis di `.env`**. `FonnteGateway::deviceInfo()` memanggil `/device`, lalu hasilnya (`device`, `device_status`, `quota`) di-cache 1 jam (`cache key: fonnte:device`). Nomor ini dipakai untuk:
+- tautan pendaftaran `wa.me/<device>`,
+- validasi webhook (field `device` harus sama),
+- health check (status `disconnect` → alert admin, pengiriman ditunda; `quota` rendah → alert).
+
+### 2.4 Keamanan webhook
 Fonnte tidak menyediakan tanda tangan (signature) webhook, jadi:
-1. URL webhook memuat token rahasia: `/webhooks/fonnte/{FONNTE_WEBHOOK_SECRET}`.
-2. Tolak jika `device` ≠ `FONNTE_DEVICE_NUMBER`.
+1. URL webhook memuat **secret turunan dari `APP_KEY`**: `hash_hmac('sha256', 'fonnte-webhook', APP_KEY)` (32 karakter pertama). Tidak perlu env baru.
+   Jalankan `php artisan wa:webhook-url` untuk menampilkan URL lengkap yang ditempel di dashboard Fonnte (Device → Edit → Webhook).
+2. Tolak (403) jika field `device` ≠ nomor device dari §2.3.
 3. Aktifkan **IP whitelist** di Fonnte untuk request `send` (hanya IP server Rahina).
-4. Token Fonnte hanya di `.env`, tidak pernah di repo.
+4. `FONNTE_TOKEN` hanya di `.env`, tidak pernah di repo.
+5. Jika `APP_KEY` dirotasi, URL webhook berubah, jadi jalankan ulang `wa:webhook-url` dan perbarui di Fonnte.
 
 ---
 
@@ -58,7 +73,7 @@ Web: pilih persona, (opsional) tanggal lahir, centang persetujuan:
   [ ] Saya setuju menerima ringkasan harian Rahina via WhatsApp pukul 06.00 WITA
   [ ] Saya setuju tanggal lahir dipakai untuk menghitung otonan (opsional)
 → Server membuat kode 6 karakter (15 menit)
-→ Tombol "Hubungkan WhatsApp" → https://wa.me/<FONNTE_DEVICE_NUMBER>?text=DAFTAR%20<KODE>
+→ Tombol "Hubungkan WhatsApp" → https://wa.me/<nomor device dari /device>?text=DAFTAR%20<KODE>
 → Webhook menerima "DAFTAR <KODE>" dari sender X → cocok → simpan langganan (nomor terenkripsi)
 → Balas: konfirmasi + cara berhenti + anjuran menyimpan nomor Rahina
 ```
@@ -144,23 +159,33 @@ app/Messaging/
   InboundRouter.php           # DAFTAR / BERHENTI / MULAI / BANTUAN / HAPUS DATA / pertanyaan
   MessageFormatter.php        # format pesan pagi & jawaban
   PersonalNoteBuilder.php
-app/Http/Controllers/Webhooks/FonnteWebhookController.php   # validasi secret & device, simpan, 200 OK, dispatch job
+app/Http/Controllers/Webhooks/FonnteWebhookController.php   # validasi secret turunan APP_KEY & device, simpan, 200 OK, dispatch job
+app/Console/Commands/WaDevice.php, WaWebhookUrl.php
 app/Jobs/SendMorningBrief.php        # retry 3× backoff
 app/Jobs/AnswerWhatsAppQuestion.php
 app/Console/Commands/WaPrepareMorning.php
 config/messaging.php                 # driver: fonnte|cloud_api|fake
 ```
 
-Env:
+Env (hanya ini):
 ```
-MESSAGING_DRIVER=fonnte
-FONNTE_TOKEN=
-FONNTE_DEVICE_NUMBER=
-FONNTE_WEBHOOK_SECRET=
-WA_SEND_TIME=06:00
-WA_SEND_WINDOW_MINUTES=30
-WA_DELAY_MIN_SECONDS=4
-WA_DELAY_MAX_SECONDS=12
+MESSAGING_DRIVER=fonnte        # fake untuk lokal/test
+FONNTE_TOKEN=                  # token device dari dashboard Fonnte
+FONNTE_API_URL=https://api.fonnte.com
+```
+
+Pengaturan pengiriman ada di `config/messaging.php` (bukan env), dengan nilai default:
+```php
+'send_time' => '06:00',            // WITA
+'send_window_minutes' => 30,
+'delay_seconds' => [4, 12],        // jeda acak antar pesan
+'device_cache_minutes' => 60,
+```
+
+Command pendukung:
+```
+php artisan wa:device          # cek nomor, status, kuota device (dari /device)
+php artisan wa:webhook-url     # tampilkan URL webhook untuk ditempel di Fonnte
 ```
 
 ---
@@ -170,7 +195,8 @@ WA_DELAY_MAX_SECONDS=12
 | Kejadian | Perilaku |
 |---|---|
 | Brief LLM gagal | Fallback template non-AI, tetap terkirim |
-| Fonnte error / device terputus | Retry 3× (1, 5, 15 menit); masih gagal → tunda, alert admin |
+| Fonnte error / device terputus | Cek `/device` sebelum batch pagi; `disconnect` → tunda batch & alert admin. Error kirim → retry 3× (1, 5, 15 menit) |
+| Token salah (`status: false`, "token invalid") | Hentikan batch, catat error, alert admin |
 | Webhook dobel (retry Fonnte) | Idempoten via hash (`sender` + timestamp + isi) / `inboxid` |
 | Agent lambat | Kirim indikator typing; balasan dari queue |
 | Pertanyaan di luar topik | Balasan sopan + menu bantuan |
@@ -180,4 +206,4 @@ WA_DELAY_MAX_SECONDS=12
 ## 9. Testing
 
 - `FakeGateway` untuk semua test; tidak ada panggilan ke Fonnte di CI.
-- Test: router kata kunci, idempotensi webhook, secret/device salah → 403, formatter (panjang, tanpa emoji), PersonalNoteBuilder (otonan hari ini / 14 hari lagi / tidak ada).
+- Test: router kata kunci, idempotensi webhook, secret/device salah → 403, cache `/device`, formatter (panjang, tanpa emoji), PersonalNoteBuilder (otonan hari ini / 14 hari lagi / tidak ada).

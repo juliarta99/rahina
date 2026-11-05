@@ -1,6 +1,6 @@
 # DATABASE_SCHEMA.md — Rahina
 
-PostgreSQL 16 + `pgvector` + `pg_trgm`. Zona waktu aplikasi `Asia/Makassar`; tanggal kalender disimpan sebagai `date` (tanggal sipil Masehi).
+**Supabase (PostgreSQL terkelola)** + `pg_trgm` (di schema `extensions`) + full-text search bawaan Postgres. Tidak memakai vektor/embedding. Koneksi & keamanan: lihat `SUPABASE.md`. Zona waktu aplikasi `Asia/Makassar`; tanggal kalender disimpan sebagai `date` (tanggal sipil Masehi).
 
 ## 1. Gambaran Kelompok Tabel
 
@@ -9,7 +9,7 @@ PostgreSQL 16 + `pgvector` + `pg_trgm`. Zona waktu aplikasi `Asia/Makassar`; tan
 | Master wariga | `wuku`, `wewaran_values`, `sasih`, `rahinan` | Seeder (dari buku) |
 | Kalender hasil hitung | `calendar_days`, `calendar_day_rahinan` | `wariga:import` (engine) |
 | Aturan dewasa | `dewasa_rules`, `dewasa_rule_effects`, `dewasa_precedence`, `calendar_day_dewasa` | Seeder + `wariga:compute-dewasa` |
-| Aktivitas | `activity_categories`, `activity_aliases` | Seeder + embedding |
+| Aktivitas | `activity_categories`, `activity_aliases` | Seeder + alias terkonfirmasi pengguna |
 | Pengetahuan & sumber | `sources`, `knowledge_notes` | Kurasi manual |
 | Pengguna | `users`, `user_profiles`, `saved_plans`, `reminders` | Aplikasi |
 | AI | `daily_briefs`, `ai_interactions` | Aplikasi |
@@ -161,9 +161,9 @@ Index: GIN `(conditions)`.
 | id | bigint PK |
 | category_id | FK |
 | phrase | varchar (misal "nanam singkong", "tanam ubi") |
-| embedding | vector(768) |
+| source | enum(`seed`,`user_confirmed`) |
 
-Index: GIN `(phrase gin_trgm_ops)`, HNSW `(embedding vector_cosine_ops)`.
+Index: GIN `(phrase gin_trgm_ops)`.
 
 ### 3.5 Sumber & pengetahuan
 
@@ -185,7 +185,9 @@ Index: GIN `(phrase gin_trgm_ops)`, HNSW `(embedding vector_cosine_ops)`.
 | content | text | **catatan ringkasan sendiri** (maks ±120 kata), bukan salinan buku |
 | source_id | FK | |
 | source_page | varchar null | |
-| embedding | vector(768) | |
+| search_vector | tsvector (generated: `to_tsvector('simple', topic || ' ' || content)`) | |
+
+Index: GIN `(search_vector)`.
 
 ### 3.6 Pengguna
 
@@ -318,19 +320,27 @@ SELECT * FROM scored WHERE pos > 0 ORDER BY (pos - neg) DESC, date ASC LIMIT :li
 ```
 Skor di atas hanya skor awal. Keputusan akhir untuk hari yang konflik ditentukan `ConflictResolver` berdasarkan `dewasa_precedence`.
 
-**Pemetaan aktivitas (hybrid):**
+**Pemetaan aktivitas (trigram):**
 ```sql
-SELECT category_id, MAX(score) AS score FROM (
-  SELECT category_id, similarity(phrase, :q) AS score FROM activity_aliases WHERE phrase % :q
-  UNION ALL
-  SELECT category_id, 1 - (embedding <=> :q_vec) AS score FROM activity_aliases
-  ORDER BY embedding <=> :q_vec LIMIT 10
-) s GROUP BY category_id ORDER BY score DESC LIMIT 3;
+SELECT category_id, MAX(GREATEST(similarity(phrase, :q), word_similarity(:q, phrase))) AS score
+FROM activity_aliases
+WHERE phrase % :q OR :q <% phrase
+GROUP BY category_id ORDER BY score DESC LIMIT 3;
+```
+Skor rendah/ambigu → klasifikasi oleh LLM (lihat `AI_IMPLEMENTATION.md` §4).
+
+**Catatan pengetahuan (full-text):**
+```sql
+SELECT id, topic, content, source_id, source_page,
+       ts_rank(search_vector, websearch_to_tsquery('simple', :q)) AS rank
+FROM knowledge_notes
+WHERE search_vector @@ websearch_to_tsquery('simple', :q) OR topic = :topic
+ORDER BY rank DESC LIMIT 3;
 ```
 
 ## 6. Migrasi (urutan)
 
-1. `enable_extensions` (vector, pg_trgm)
+1. `enable_extensions` (pg_trgm `with schema extensions`)
 2. `create_sources_table`
 3. `create_wuku_wewaran_sasih_tables`
 4. `create_calendar_days_table`
@@ -341,3 +351,9 @@ SELECT category_id, MAX(score) AS score FROM (
 9. `create_user_profiles_plans_reminders`
 10. `create_ai_tables`
 11. `create_whatsapp_tables`
+12. `lock_public_schema` (enable RLS semua tabel `public`; ulangi via `db:lock-public` setiap tabel baru)
+
+## 7. Catatan Supabase
+- Fungsi `similarity`, `%`, `<%` dari `pg_trgm` berada di schema `extensions`; pastikan `search_path` = `public,extensions`.
+- Pantau ukuran DB (batas Free 500 MB).
+- Retensi log: `ai_interactions` & `whatsapp_messages` dihapus otomatis setelah 90 hari (`model:prune`).

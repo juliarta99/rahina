@@ -14,10 +14,10 @@ Masyarakat Bali memakai kalender wariga untuk menentukan hari baik bertani, berd
 - Kalender bulanan, detail hari, rahinan, purnama/tilem, perencana + ekspor `.ics`.
 
 ## Tech Stack
-Laravel 12 · Inertia + React + TypeScript · Tailwind v4 · PostgreSQL 16 + pgvector · Node (balinese-date-js) · Gemini API
+Laravel 12 · Inertia + React + TypeScript · Tailwind v4 · Supabase (PostgreSQL) · Node (balinese-date-js) · Gemini API
 
 ## AI Implementation
-Lihat [`docs/AI_IMPLEMENTATION.md`](docs/AI_IMPLEMENTATION.md). Ringkasnya: perhitungan kalender deterministik; Gemini dipakai untuk ringkasan, pemetaan aktivitas, dan agent function calling. Setiap tanggal di jawaban AI divalidasi terhadap hasil tool (`app/AI/OutputGuard.php`).
+Lihat [`docs/AI_IMPLEMENTATION.md`](docs/AI_IMPLEMENTATION.md). Ringkasnya: perhitungan kalender deterministik; Gemini (`gemini-3.1-flash-lite`) dipakai untuk ringkasan, pemetaan aktivitas, dan agent function calling. Setiap tanggal di jawaban AI divalidasi terhadap hasil tool (`app/AI/OutputGuard.php`).
 
 ## Architecture / Data Flow
 Lihat [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
@@ -26,11 +26,11 @@ Lihat [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 ```bash
 composer install && npm install
 cp .env.example .env && php artisan key:generate
+# isi DB_* dengan Session pooler Supabase (lihat docs/SUPABASE.md)
 php artisan migrate --seed
 node scripts/calendar/compute.mjs 2020 2035
 php artisan wariga:import storage/app/calendar
 php artisan wariga:compute-dewasa
-php artisan wariga:embed --missing
 composer run dev
 ```
 
