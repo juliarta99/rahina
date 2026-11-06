@@ -15,14 +15,22 @@ import { cn } from '@/lib/utils';
 import { ask, home, login, register } from '@/routes';
 import { profile } from '@/routes/rahina';
 
-type Current = 'home' | 'calendar' | 'ask' | 'profile';
+export type NavCurrent =
+    | 'home'
+    | 'calendar'
+    | 'ask'
+    | 'profile'
+    | 'about'
+    | 'privacy'
+    | 'terms'
+    | 'error';
 
 /**
  * Navigasi utama responsif (DESIGN_SYSTEM.md §7):
  * - Layar desktop (md+): menu horizontal terpadu.
  * - Layar ponsel (<md): tombol hamburger + drawer menu vertikal ramah sentuh.
  */
-export function SiteNav({ current }: { current: Current }) {
+export function SiteNav({ current }: { current: NavCurrent }) {
     const { auth } = usePage().props;
     const [mobileOpen, setMobileOpen] = useState(false);
 

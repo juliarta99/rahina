@@ -19,6 +19,7 @@ import { CulturalNotice } from '@/components/rahina/cultural-notice';
 import { DateRefCard } from '@/components/rahina/date-ref-card';
 import { DayDialog } from '@/components/rahina/day-dialog';
 import { RahinaHeader } from '@/components/rahina/rahina-header';
+import { SiteFooter } from '@/components/rahina/site-footer';
 import { id } from '@/lang/id';
 import { store as askStore } from '@/routes/ask';
 import type { AgentAnswer, AskPageProps } from '@/types/rahina';
@@ -327,9 +328,7 @@ export default function Ask(_props: AskPageProps) {
                 </form>
             </main>
 
-            <footer className="pb-8 text-center text-[13px] leading-[18px] text-abu-600">
-                {id.disclaimer}
-            </footer>
+            <SiteFooter />
 
             <DayDialog date={selected} onClose={() => setSelected(null)} />
 

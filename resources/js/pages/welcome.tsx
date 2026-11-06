@@ -19,6 +19,7 @@ import {
 } from '@phosphor-icons/react';
 import { BrandLogo } from '@/components/rahina/brand-logo';
 import { RahinaHeader } from '@/components/rahina/rahina-header';
+import { SiteFooter } from '@/components/rahina/site-footer';
 import { id } from '@/lang/id';
 import { ask } from '@/routes';
 import { profile } from '@/routes/rahina';
@@ -87,7 +88,7 @@ export default function Welcome({
         },
         {
             q: 'Bagaimana cara mengaktifkan atau menghentikan notifikasi WhatsApp Rahina Pagi?',
-            a: 'Cukup masuk ke akun Anda, buka halaman Profil, dan masukkan nomor WhatsApp aktif Anda. Setiap pagi pukul 06:00 WITA, ringkasan hari ini akan dikirimkan otomatis. Jika ingin berhenti, Anda cukup membalas pesan WhatsApp bot dengan kata "STOP" kapan saja.',
+            a: 'Cukup masuk ke akun Anda, buka halaman Profil, dan masukkan nomor WhatsApp aktif Anda. Setiap pagi pukul 07:00 WITA, ringkasan hari ini akan dikirimkan otomatis. Jika ingin berhenti, Anda cukup membalas pesan WhatsApp bot dengan kata "STOP" kapan saja.',
         },
         {
             q: 'Pustaka apa saja yang menjadi landasan perhitungan wariga di Rahina?',
@@ -182,7 +183,7 @@ export default function Welcome({
                                 </span>
                                 <span className="flex items-center gap-1.5 font-medium">
                                     <CheckCircle size={16} weight="fill" className="text-ayu" />
-                                    Notifikasi WhatsApp Pukul 06:00 WITA
+                                    Notifikasi WhatsApp Pukul 07:00 WITA
                                 </span>
                             </div>
                         </div>
@@ -326,7 +327,7 @@ export default function Welcome({
                                 Rahina Pagi via WhatsApp Otomatis
                             </h3>
                             <p className="mt-2 text-xs leading-relaxed text-abu-600 sm:text-sm">
-                                Tidak perlu repot membuka website setiap hari. Nikmati pesan ringkasan rahinan dan intisari dewasa ayu hari itu tepat pukul 06:00 WITA langsung di WhatsApp.
+                                Tidak perlu repot membuka website setiap hari. Nikmati pesan ringkasan rahinan dan intisari dewasa ayu hari itu tepat pukul 07:00 WITA langsung di WhatsApp.
                             </p>
                         </div>
 
@@ -422,7 +423,7 @@ export default function Welcome({
                                 Pasang Pengingat WhatsApp
                             </h3>
                             <p className="mt-2 text-xs leading-relaxed text-abu-600">
-                                Daftarkan nomor telepon Anda di halaman Profil untuk menerima ringkasan otomatis Rahina Pagi setiap pukul 06:00 WITA tanpa repot membuka aplikasi.
+                                Daftarkan nomor telepon Anda di halaman Profil untuk menerima ringkasan otomatis Rahina Pagi setiap pukul 07:00 WITA tanpa repot membuka aplikasi.
                             </p>
                         </div>
                     </div>
@@ -538,31 +539,7 @@ export default function Welcome({
             </section>
 
             {/* FOOTER RESMI RAHINA */}
-            <footer className="border-t border-abu-200 bg-kertas py-12 text-sm text-abu-600">
-                <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                    <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-                        <BrandLogo />
-                        <div className="flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm">
-                            <Link href="/kalender" className="hover:text-nila hover:underline">
-                                Kalender Bali
-                            </Link>
-                            <Link href={ask.url()} className="hover:text-nila hover:underline">
-                                Tanya Wariga AI
-                            </Link>
-                            <Link href={profile.url()} className="hover:text-nila hover:underline">
-                                Profil & WhatsApp
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 border-t border-abu-200/80 pt-6 text-center text-xs text-abu-600 sm:flex sm:items-center sm:justify-between sm:text-left">
-                        <p>© {new Date().getFullYear()} Rahina. Mugi Rahayu Sareng Sami.</p>
-                        <p className="mt-2 sm:mt-0">
-                            Berlandaskan Lontar Sundarigama, Medangkemulan & Tri Pramana.
-                        </p>
-                    </div>
-                </div>
-            </footer>
+            <SiteFooter />
 
             {/* FLOATING WIDGET POJOK KANAN BAWAH: GEK INA */}
             <aside
