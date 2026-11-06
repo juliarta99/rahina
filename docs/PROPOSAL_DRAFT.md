@@ -48,7 +48,7 @@ Masalahnya, informasi harian tersebut:
 2. Tap "lihat sumber" → daftar dewasa lengkap beserta rujukan buku.
 3. Buka **Tanya Wariga** → ketik "hari baik menanam cabai bulan Desember" → muncul 3-5 tanggal terbaik, masing-masing dengan wuku/wewaran, dewasa pendukung & penghalang, dan tautan ke detail hari.
 4. Simpan tanggal ke rencana / ekspor ke Google Calendar.
-5. **Tanpa membuka aplikasi:** pengguna yang mendaftarkan WhatsApp menerima ringkasan setiap pukul 06.00 WITA (umum + catatan pribadi seperti hitung mundur otonan), dan cukup membalas pesan untuk bertanya hari baik.
+5. **Tanpa membuka aplikasi:** pengguna yang mendaftarkan WhatsApp menerima ringkasan setiap pukul 07.00 WITA (umum + catatan pribadi seperti hitung mundur otonan), dan cukup membalas pesan untuk bertanya hari baik.
 
 ## 4. AI Implementation
 

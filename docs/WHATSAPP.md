@@ -1,6 +1,6 @@
 # WHATSAPP.md - Rahina Pagi via WhatsApp (Fonnte)
 
-Fitur: pengguna yang mendaftarkan nomor WhatsApp menerima **ringkasan harian pukul 06.00 WITA** (bagian umum + bagian pribadi berdasarkan otonan), dan bisa **membalas pesan untuk bertanya** ke Tanya Wariga.
+Fitur: pengguna yang mendaftarkan nomor WhatsApp menerima **ringkasan harian pukul 07.00 WITA** (bagian umum + bagian pribadi berdasarkan otonan), dan bisa **membalas pesan untuk bertanya** ke Tanya Wariga.
 
 Penyedia: **Fonnte** (gateway WhatsApp). Semua akses ke Fonnte dibungkus interface `MessagingGateway`, sehingga bisa diganti ke WhatsApp Cloud API resmi tanpa mengubah logika bisnis.
 
@@ -79,7 +79,7 @@ Fonnte tidak menyediakan tanda tangan (signature) webhook, jadi:
 
 ```
 Web (Profil, wajib masuk akun): (opsional) tanggal lahir, centang persetujuan:
-  [ ] Saya setuju menerima ringkasan harian Rahina via WhatsApp pukul 06.00 WITA
+  [ ] Saya setuju menerima ringkasan harian Rahina via WhatsApp pukul 07.00 WITA
   [ ] Saya setuju tanggal lahir dipakai untuk menghitung otonan (opsional)
 → Server membuat kode 6 karakter (15 menit)
 → Tombol "Hubungkan WhatsApp" → https://wa.me/<nomor device dari /device>?text=DAFTAR%20<KODE>
@@ -94,8 +94,8 @@ Web (Profil, wajib masuk akun): (opsional) tanggal lahir, centang persetujuan:
 05:45 WITA  wa:prepare-morning   → susun pesan tiap langganan aktif
               umum   = daily_briefs[umum]
               pribadi = PersonalNoteBuilder (tanpa LLM)
-            → dispatch SendMorningBrief dengan jeda bertahap mulai 06:00
-06:00-06:30 kirim berurutan, jeda acak 4-12 detik antar pesan
+            → dispatch SendMorningBrief dengan jeda bertahap mulai 07:00
+07:00-07:30 kirim berurutan, jeda acak 4-12 detik antar pesan
 ```
 
 Kapasitas kasar: 30 menit ÷ ±8 detik ≈ 225 pesan per nomor. Lebih dari itu → perpanjang jendela atau tambah device.
@@ -193,7 +193,7 @@ FONNTE_API_URL=https://api.fonnte.com
 Pengaturan pengiriman ada di `config/messaging.php` (bukan env), dengan nilai default:
 
 ```php
-'send_time' => '06:00',            // WITA
+'send_time' => '07:00',            // WITA
 'send_window_minutes' => 30,
 'delay_seconds' => [4, 12],        // jeda acak antar pesan
 'device_cache_minutes' => 60,
@@ -238,7 +238,7 @@ Sudah dibangun & diuji (`tests/Feature/WhatsApp/WhatsAppTest.php`, driver `fake`
 | Opt-in web        | `/profil` (wajib masuk akun) → `RahinaProfileController`: persetujuan, tanggal lahir opsional + persetujuan terpisah, kode DAFTAR 15 menit, jeda/lanjut, hapus data |
 | Webhook           | `POST /webhooks/fonnte/{secret}` → `Webhooks/FonnteWebhookController` (secret turunan APP_KEY, cek device, idempoten, 200 OK, queue)                                |
 | Router kata kunci | `app/Messaging/InboundRouter.php`: DAFTAR, BERHENTI/STOP, MULAI, BANTUAN, PROFIL, HAPUS DATA, selain itu → Tanya Wariga                                             |
-| Pesan pagi        | `wa:prepare-morning` (05:45, `routes/console.php`) → `Jobs/SendMorningBrief` bertahap mulai 06:00, jeda acak 4-12 s, idempoten per tanggal, retry 1/5/15 menit      |
+| Pesan pagi        | `wa:prepare-morning` (05:45, `routes/console.php`) → `Jobs/SendMorningBrief` bertahap mulai 07:00, jeda acak 4-12 s, idempoten per tanggal, retry 1/5/15 menit      |
 | Catatan pribadi   | `PersonalNoteBuilder` + `App\Wariga\Otonan` (siklus 210 hari, tanpa LLM)                                                                                            |
 | Perintah          | `php artisan wa:device` (status device), `php artisan wa:device --webhook` (URL webhook)                                                                            |
 
