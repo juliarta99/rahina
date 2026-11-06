@@ -108,7 +108,7 @@
       "sisa": 13,
       "label": "Sisa 13",
       "ramalan": "pasangan ini akan baik, kaya dan panjang umur.",
-      "verdict": "campur"
+      "verdict": "ayu"
     },
     {
       "sisa": 14,
@@ -121,6 +121,12 @@
       "label": "Sisa 15",
       "ramalan": "pasangan ini akan mandul, sering dapat kesusahan.",
       "verdict": "ala"
+    },
+    {
+      "sisa": 16,
+      "label": "Sisa 16",
+      "ramalan": "pasangan ini akan hidup rukun dan bahagia.",
+      "verdict": "ayu"
     },
     {
       "sisa": 0,

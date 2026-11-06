@@ -51,14 +51,114 @@ it('dapat menghitung dan memuat numerologi 9 garis hidup', function (): void {
         ->and($byDate['number'])->toBe(4);
 });
 
-it('dapat menghitung perjodohan Lontar Tri Pramana (mod 16)', function (): void {
-    $jodoh = $this->knowledge->calculateJodoh('2000-01-01', '2000-02-02');
+it('dapat mengekstrak banyak tanggal dari teks bebas dengan parseAllDates', function (): void {
+    // 1. Format teks bahasa Indonesia dengan nama bulan
+    $dates1 = $this->knowledge->parseAllDates('Kecocokan jodoh antara kelahiran 15 Mei 1998 dan 20 Oktober 1999');
+    expect($dates1)->toHaveCount(2)
+        ->and($dates1[0]->toDateString())->toBe('1998-05-15')
+        ->and($dates1[1]->toDateString())->toBe('1999-10-20');
 
-    expect($jodoh)->toHaveKeys(['person1', 'person2', 'total_urip', 'modulo', 'sisa', 'ramalan', 'verdict'])
-        ->and($jodoh['modulo'])->toBe(16)
-        ->and($jodoh['sisa'])->toBeGreaterThanOrEqual(0)
-        ->and($jodoh['sisa'])->toBeLessThan(16)
-        ->and($jodoh['ramalan'])->not->toBeEmpty();
+    // 2. Format ISO YYYY-MM-DD
+    $dates2 = $this->knowledge->parseAllDates('1998-05-15 dengan 1999-10-20');
+    expect($dates2)->toHaveCount(2)
+        ->and($dates2[0]->toDateString())->toBe('1998-05-15')
+        ->and($dates2[1]->toDateString())->toBe('1999-10-20');
+
+    // 3. Format DD/MM/YYYY
+    $dates3 = $this->knowledge->parseAllDates('15/05/1998 dan 20/10/1999');
+    expect($dates3)->toHaveCount(2)
+        ->and($dates3[0]->toDateString())->toBe('1998-05-15')
+        ->and($dates3[1]->toDateString())->toBe('1999-10-20');
+});
+
+it('dapat menghitung perjodohan Lontar Tri Pramana (mod 16) dengan variasi kategori yang benar', function (): void {
+    // 1. Pasangan dengan verdict 'ayu' (Baik / Rukun & Bahagia)
+    // 1998-05-15 (urip 22) + 1999-10-20 (urip 17) = 39. 39 mod 16 = 7 -> ayu (suka duka akhirnya bahagia)
+    $jodohAyu = $this->knowledge->calculateJodoh('1998-05-15', '1999-10-20');
+    expect($jodohAyu['verdict'])->toBe('ayu')
+        ->and($jodohAyu['kategori'])->toBe('Baik / Rukun & Bahagia')
+        ->and($jodohAyu['sisa'])->toBe(7)
+        ->and($jodohAyu['cultural_notice'])->toBeTrue();
+
+    // 2. Pasangan dengan verdict 'ala' (Kurang Baik / Perlu Kehati-hatian)
+    // Cek bahwa sistem memiliki aturan ala dan dapat menghitungnya
+    $jodohSample = $this->knowledge->calculateJodoh('1990-01-01', '1992-06-05');
+    // Jika sisa bukan ala, cari tanggal yang menghasilkan ala
+    $targetAla = null;
+    $checkDates = ['1990-01-01', '1990-01-02', '1990-01-03', '1990-01-04', '1990-01-05', '1990-01-06'];
+    foreach ($checkDates as $cd) {
+        $c = $this->knowledge->calculateJodoh('1990-01-01', $cd);
+        if ($c['verdict'] === 'ala') {
+            $targetAla = $c;
+            break;
+        }
+    }
+    expect($targetAla)->not->toBeNull()
+        ->and($targetAla['verdict'])->toBe('ala')
+        ->and($targetAla['kategori'])->toBe('Kurang Baik / Perlu Kehati-hatian');
+
+    // 3. Pasangan dengan verdict 'campur' (Suka Duka Berimbang)
+    $targetCampur = null;
+    $checkDatesCampur = ['1990-01-01', '1990-01-02', '1990-01-03', '1990-01-04', '1990-01-05', '1990-01-06', '1990-01-07', '1990-01-08'];
+    foreach ($checkDatesCampur as $cd) {
+        $c = $this->knowledge->calculateJodoh('1990-01-01', $cd);
+        if ($c['verdict'] === 'campur') {
+            $targetCampur = $c;
+            break;
+        }
+    }
+    expect($targetCampur)->not->toBeNull()
+        ->and($targetCampur['verdict'])->toBe('campur')
+        ->and($targetCampur['kategori'])->toBe('Suka Duka Berimbang');
+
+    // 4. Modulo 16 tepat (sisa 0 dipetakan ke 16)
+    // Cek sisa 16 menghasilkan ayu
+    $allJodoh = $this->knowledge->allJodoh();
+    $sisa16Rule = array_values(array_filter($allJodoh['rules'], fn ($r) => (int) $r['sisa'] === 16))[0] ?? null;
+    expect($sisa16Rule)->not->toBeNull()
+        ->and($sisa16Rule['verdict'])->toBe('ayu');
+});
+
+it('dapat menangani konsultasi jodoh lewat tool consult_knowledge dalam berbagai format query', function (): void {
+    // 1. Argumen birthdate dan partner_birthdate terpisah
+    $res1 = $this->tool->run([
+        'topic' => 'jodoh',
+        'birthdate' => '15 Mei 1998',
+        'partner_birthdate' => '20 Oktober 1999',
+    ], $this->context);
+    expect($res1['found'])->toBeTrue()
+        ->and($res1['data']['verdict'])->toBe('ayu')
+        ->and($this->context->allowedDates)->toContain('1998-05-15', '1999-10-20');
+
+    // 2. Argumen kedua tanggal digabung dalam satu teks query
+    $context2 = new AgentContext('2026-11-06');
+    $res2 = $this->tool->run([
+        'topic' => 'jodoh',
+        'query' => 'Kecocokan 15 Mei 1998 dan 20 Oktober 1999',
+    ], $context2);
+    expect($res2['found'])->toBeTrue()
+        ->and($res2['data']['verdict'])->toBe('ayu')
+        ->and($context2->allowedDates)->toContain('1998-05-15', '1999-10-20');
+
+    // 3. Topik search tetapi ada kata kunci jodoh dan 2 tanggal
+    $context3 = new AgentContext('2026-11-06');
+    $res3 = $this->tool->run([
+        'topic' => 'search',
+        'query' => 'bagaimana kecocokan jodoh antara kelahiran 15 Mei 1998 dan 20 Oktober 1999',
+    ], $context3);
+    expect($res3['found'])->toBeTrue()
+        ->and($res3['topic'])->toBe('jodoh')
+        ->and($res3['data']['verdict'])->toBe('ayu');
+
+    // 4. Topik search dengan kata kunci jodoh tetapi HANYA 1 tanggal -> minta tanggal pasangan
+    $context4 = new AgentContext('2026-11-06');
+    $res4 = $this->tool->run([
+        'topic' => 'search',
+        'query' => 'bagaimana ramalan jodoh saya kelahiran 15 Mei 1998',
+    ], $context4);
+    expect($res4['found'])->toBeFalse()
+        ->and($res4['needs_clarification'])->toBeTrue()
+        ->and($res4['clarification_question'])->toContain('pasangan');
 });
 
 it('dapat memuat kamus arti wewaran, wuku, lintang, dan pratiti', function (): void {
@@ -136,5 +236,44 @@ it('dapat menghitung dan mengembalikan profil kelahiran lengkap untuk 29 Januari
         ->and($resSearch['topic'])->toBe('karakter_kelahiran')
         ->and($resSearch['data']['bintang']['name'])->toBe('Aquarius');
 });
+
+it('meloloskan jawaban Tanya Wariga yang menyebut tanggal lahir dan zodiak tanpa dibuang oleh OutputGuard', function (): void {
+    seedReferenceCalendar();
+    $guard = app(\App\AI\OutputGuard::class);
+
+    // Kasus 1: Sifat kelahiran 29 Januari 2006 (menyebut 29 Januari 2006 dan zodiak 20 Januari - 18 Februari)
+    $context1 = new AgentContext('2026-11-06');
+    $this->tool->run(['topic' => 'arti_hari', 'query' => '29 Januari 2006'], $context1);
+
+    $answerText1 = 'Kelahiran 29 Januari 2006 memiliki bintang Aquarius 20 Januari - 18 Februari dengan Angka Garis Hidup 2. Lahir pada hari Redite Minggu yang memiliki watak tenang.';
+    $output1 = [
+        'answer' => $answerText1,
+        'dates' => [],
+        'needs_clarification' => false,
+        'clarification_options' => [],
+        'cultural_notice' => true,
+        'out_of_scope' => false,
+    ];
+    $ans1 = $guard->answer($output1, $context1);
+    expect($ans1->generatedBy)->toBe(\App\Data\AgentAnswer::BY_AI)
+        ->and($ans1->answer)->toBe($answerText1);
+
+    // Kasus 2: Jodoh 15 Mei 1998 dan 20 Oktober 1999
+    $context2 = new AgentContext('2026-11-06');
+    $this->tool->run(['topic' => 'jodoh', 'query' => '15 Mei 1998 dan 20 Oktober 1999'], $context2);
+
+    $answerText2 = 'Menurut Lontar Tri Pramana, pasangan kelahiran 15 Mei 1998 dan 20 Oktober 1999 memiliki total urip 39 dengan sisa 7. Kategori hubungan ini adalah Baik / Rukun & Bahagia.';
+    $output2 = [
+        'answer' => $answerText2,
+        'dates' => [],
+        'needs_clarification' => false,
+        'cultural_notice' => true,
+        'out_of_scope' => false,
+    ];
+    $ans2 = $guard->answer($output2, $context2);
+    expect($ans2->generatedBy)->toBe(\App\Data\AgentAnswer::BY_AI)
+        ->and($ans2->answer)->toBe($answerText2);
+});
+
 
 

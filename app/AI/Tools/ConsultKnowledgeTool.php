@@ -83,19 +83,36 @@ final class ConsultKnowledgeTool implements Tool
         $partnerDate = trim((string) ($args['partner_birthdate'] ?? ''));
         $lifeNumber = isset($args['life_path_number']) ? (int) $args['life_path_number'] : null;
 
+        // Normalisasi tanggal lahir ke format ISO YYYY-MM-DD
         if ($birthdate !== '') {
-            $context->allowedDates[] = $birthdate;
+            $parsedB = $this->knowledge->parseDate($birthdate);
+            $birthdate = $parsedB !== null ? $parsedB->toDateString() : $birthdate;
+            $this->allowDate($birthdate, $context);
         }
         if ($partnerDate !== '') {
-            $context->allowedDates[] = $partnerDate;
+            $parsedP = $this->knowledge->parseDate($partnerDate);
+            $partnerDate = $parsedP !== null ? $parsedP->toDateString() : $partnerDate;
+            $this->allowDate($partnerDate, $context);
+        }
+
+        // Jika topik jodoh dan salah satu atau kedua tanggal belum terisi, coba ekstrak dari query atau birthdate
+        if ($topic === 'jodoh' && ($partnerDate === '' || $birthdate === '')) {
+            $combined = trim("{$birthdate} {$partnerDate} {$query}");
+            $dates = $this->knowledge->parseAllDates($combined);
+            if (count($dates) >= 2) {
+                $birthdate = $dates[0]->toDateString();
+                $partnerDate = $dates[1]->toDateString();
+                $this->allowDate($birthdate, $context);
+                $this->allowDate($partnerDate, $context);
+            }
         }
 
         $res = match ($topic) {
-            'bintang' => $this->handleBintang($query, $birthdate),
-            'garis_hidup' => $this->handleGarisHidup($lifeNumber, $birthdate, $query),
+            'bintang' => $this->handleBintang($query, $birthdate, $context),
+            'garis_hidup' => $this->handleGarisHidup($lifeNumber, $birthdate, $query, $context),
             'jodoh' => $this->handleJodoh($birthdate, $partnerDate),
-            'arti_hari' => $this->handleArtiHari($query, $birthdate),
-            default => $this->handleSearch($query !== '' ? $query : $birthdate),
+            'arti_hari' => $this->handleArtiHari($query, $birthdate, $context),
+            default => $this->handleSearch($query !== '' ? $query : $birthdate, $context),
         };
 
         if (($res['cultural_notice'] ?? false) === true) {
@@ -105,7 +122,47 @@ final class ConsultKnowledgeTool implements Tool
         return $res;
     }
 
-    private function handleBintang(string $query, string $birthdate): array
+    private function allowDate(string $date, AgentContext $context): void
+    {
+        $parsed = $this->knowledge->parseDate($date);
+        if ($parsed !== null) {
+            $iso = $parsed->toDateString();
+            if (! in_array($iso, $context->allowedDates, true)) {
+                $context->allowedDates[] = $iso;
+            }
+        } elseif (! in_array($date, $context->allowedDates, true)) {
+            $context->allowedDates[] = $date;
+        }
+    }
+
+    private function allowZodiacDates(?array $bintang, AgentContext $context): void
+    {
+        if ($bintang === null || ! isset($bintang['dates'])) {
+            return;
+        }
+
+        $idToMonth = [
+            'januari' => '01', 'februari' => '02', 'pebruari' => '02',
+            'maret' => '03', 'april' => '04', 'mei' => '05',
+            'juni' => '06', 'juli' => '07', 'agustus' => '08',
+            'september' => '09', 'oktober' => '10',
+            'nopember' => '11', 'november' => '11', 'desember' => '12',
+        ];
+
+        $pattern = implode('|', array_keys($idToMonth));
+        if (preg_match_all('/\b(\d{1,2})\s+('.$pattern.')\b/iu', (string) $bintang['dates'], $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $m) {
+                $day = str_pad($m[1], 2, '0', STR_PAD_LEFT);
+                $month = $idToMonth[mb_strtolower($m[2])];
+                $mmdd = "{$month}-{$day}";
+                if (! in_array($mmdd, $context->allowedDates, true)) {
+                    $context->allowedDates[] = $mmdd;
+                }
+            }
+        }
+    }
+
+    private function handleBintang(string $query, string $birthdate, AgentContext $context): array
     {
         $target = $query !== '' ? $query : $birthdate;
         if ($target === '') {
@@ -125,9 +182,11 @@ final class ConsultKnowledgeTool implements Tool
             ];
         }
 
+        $this->allowZodiacDates($bintang, $context);
         $responseData = $bintang;
         $date = $this->knowledge->parseDate($target);
         if ($date !== null) {
+            $this->allowDate($date->toDateString(), $context);
             $profile = $this->knowledge->getBirthProfile($date);
             $responseData['profil_kelahiran'] = [
                 'birthdate_formatted' => $profile['birthdate_formatted'],
@@ -135,6 +194,8 @@ final class ConsultKnowledgeTool implements Tool
                 'garis_hidup_uraian' => $profile['garis_hidup']['description'] ?? null,
                 'hari_lahir' => $profile['hari_lahir']['nama'] ?? null,
                 'hari_lahir_karakter' => $profile['hari_lahir']['karakter'] ?? null,
+                'pancawara' => $profile['pancawara']['nama'] ?? null,
+                'sadwara' => $profile['sadwara']['nama'] ?? null,
             ];
         }
 
@@ -146,7 +207,7 @@ final class ConsultKnowledgeTool implements Tool
         ];
     }
 
-    private function handleGarisHidup(?int $number, string $birthdate, string $query): array
+    private function handleGarisHidup(?int $number, string $birthdate, string $query, AgentContext $context): array
     {
         $target = $number ?? ($birthdate !== '' ? $birthdate : (is_numeric($query) ? (int) $query : null));
         if ($target === null) {
@@ -155,6 +216,10 @@ final class ConsultKnowledgeTool implements Tool
                 'needs_clarification' => true,
                 'clarification_question' => 'Untuk menghitung angka Garis Hidup, mohon sebutkan tanggal, bulan, dan tahun lahir lengkap Anda (contoh: 17 Agustus 1995).',
             ];
+        }
+
+        if (is_string($target)) {
+            $this->allowDate($target, $context);
         }
 
         $garis = $this->knowledge->findGarisHidup($target);
@@ -202,7 +267,7 @@ final class ConsultKnowledgeTool implements Tool
         }
     }
 
-    private function handleArtiHari(string $query, string $birthdate): array
+    private function handleArtiHari(string $query, string $birthdate, AgentContext $context): array
     {
         $target = $query !== '' ? $query : $birthdate;
         if ($target === '') {
@@ -216,7 +281,9 @@ final class ConsultKnowledgeTool implements Tool
         // 1. Bila target adalah tanggal lahir (misal "29 Januari 2006" atau "2006-01-29")
         $date = $this->knowledge->parseDate($target);
         if ($date !== null) {
+            $this->allowDate($date->toDateString(), $context);
             $profile = $this->knowledge->getBirthProfile($date);
+            $this->allowZodiacDates($profile['bintang'] ?? null, $context);
 
             return [
                 'found' => true,
@@ -255,7 +322,7 @@ final class ConsultKnowledgeTool implements Tool
         ];
     }
 
-    private function handleSearch(string $query): array
+    private function handleSearch(string $query, AgentContext $context): array
     {
         if ($query === '') {
             return [
@@ -265,10 +332,35 @@ final class ConsultKnowledgeTool implements Tool
             ];
         }
 
-        // Periksa bila query mengandung tanggal lahir
-        $date = $this->knowledge->parseDate($query);
-        if ($date !== null) {
+        // Cek bila query terkait kecocokan jodoh / pasangan
+        $isJodoh = preg_match('/\b(jodoh|cocok|pasangan|perjodohan|nikah|kawin)\b/iu', $query) === 1;
+        $allDates = $this->knowledge->parseAllDates($query);
+        if ($isJodoh && count($allDates) >= 2) {
+            $b1 = $allDates[0]->toDateString();
+            $b2 = $allDates[1]->toDateString();
+            $this->allowDate($b1, $context);
+            $this->allowDate($b2, $context);
+
+            return $this->handleJodoh($b1, $b2);
+        }
+
+        if ($isJodoh && count($allDates) === 1) {
+            $b1 = $allDates[0]->toDateString();
+            $this->allowDate($b1, $context);
+
+            return [
+                'found' => false,
+                'needs_clarification' => true,
+                'clarification_question' => "Untuk menghitung ramalan kecocokan jodoh kelahiran {$b1} menurut Lontar Tri Pramana, mohon sebutkan tanggal lahir pasangan Anda.",
+            ];
+        }
+
+        // Periksa bila query mengandung tanggal lahir tunggal
+        if ($allDates !== []) {
+            $date = $allDates[0];
+            $this->allowDate($date->toDateString(), $context);
             $profile = $this->knowledge->getBirthProfile($date);
+            $this->allowZodiacDates($profile['bintang'] ?? null, $context);
 
             return [
                 'found' => true,
