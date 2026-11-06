@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     CalendarBlank,
     ChatCircleText,
+    House,
     SignIn,
     User,
 } from '@phosphor-icons/react';
@@ -11,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { ask, home, login, register } from '@/routes';
 import { profile } from '@/routes/rahina';
 
-type Current = 'calendar' | 'ask' | 'profile';
+type Current = 'home' | 'calendar' | 'ask' | 'profile';
 
 /**
  * Navigasi utama (DESIGN_SYSTEM.md §7): ikon + label, tab aktif nila.
@@ -26,8 +27,14 @@ export function SiteNav({ current }: { current: Current }) {
         Icon: Icon;
     }[] = [
         {
+            key: 'home',
+            href: '/',
+            label: id.nav.home,
+            Icon: House,
+        },
+        {
             key: 'calendar',
-            href: home.url(),
+            href: '/kalender',
             label: id.nav.calendar,
             Icon: CalendarBlank,
         },

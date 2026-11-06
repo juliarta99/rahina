@@ -3,11 +3,14 @@
 use App\Http\Controllers\AskController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DayDetailController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\RahinaProfileController;
 use App\Http\Controllers\Webhooks\FonnteWebhookController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', CalendarController::class)->name('home');
+Route::get('/', LandingController::class)->name('home');
+Route::get('/kalender', CalendarController::class)->name('calendar');
+Route::get('/landing', LandingController::class)->name('landing');
 Route::get('/hari/{date}', DayDetailController::class)
     ->where('date', '\d{4}-\d{2}-\d{2}')
     ->name('day.show');

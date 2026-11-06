@@ -20,7 +20,7 @@ export const id = {
         noDewasa:
             'Belum ada dewasa tervalidasi untuk tanggal ini. Aturan dewasa ditampilkan setelah diperiksa narasumber.',
         notAvailable:
-            'Tanggal ini belum tersedia di kalender Rahina (2020–2035).',
+            'Tanggal ini belum tersedia di kalender Rahina (2020-2035).',
         sheetTitle: 'Sumber & data mentah',
         sheetDescription:
             'Daftar dewasa beserta sumber tertulisnya, dan hasil perhitungan wariga untuk tanggal ini.',
@@ -192,7 +192,7 @@ export const id = {
     },
     ask: {
         title: 'Tanya Wariga',
-        intro: 'Tanyakan hari baik untuk beragam kegiatan Anda—seperti membuka usaha, pertanian, mendirikan bangunan, hingga upacara—serta telaah kearifan wariga (zodiak bintang Bali, garis hidup, dan perjodohan). Jawaban disusun dari data perhitungan wariga, lengkap dengan dewasa dan sumbernya.',
+        intro: 'Tanyakan hari baik untuk beragam kegiatan Anda-seperti membuka usaha, pertanian, mendirikan bangunan, hingga upacara-serta telaah kearifan wariga (zodiak bintang Bali, garis hidup, dan perjodohan). Jawaban disusun dari data perhitungan wariga, lengkap dengan dewasa dan sumbernya.',
         placeholder: 'Contoh: hari baik buka warung atau karakter kelahiran 15 Mei?',
         inputLabel: 'Pertanyaan',
         send: 'Tanya',
@@ -217,7 +217,7 @@ export const id = {
         clarifyLabel: 'Pilih kategori kegiatan',
         support: 'Mendukung',
         block: 'Penghalang',
-        none: '—',
+        none: '-',
         seeDetail: 'Lihat detail hari',
         stepsLabel: 'Langkah pencarian',
         templateNotice:
