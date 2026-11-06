@@ -47,6 +47,7 @@ class DayDetailController extends Controller
             'date' => $date,
             'day' => $day->toArray(),
             'brief' => $brief?->toArray(),
+            'summary' => $brief?->summary(),
             'dewasa' => array_map(fn (DewasaMatch $d): array => $d->toArray(), $dewasa),
             'sourceCount' => count(array_unique(array_map(fn (DewasaMatch $d): string => $d->sourceTitle, $dewasa))),
             'culturalNotice' => $culturalNotice,

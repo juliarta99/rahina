@@ -27,7 +27,30 @@ final readonly class DailyBrief
         public string $generatedBy,
         public string $model,
         public string $promptVersion,
+        public ?string $summary = null,
     ) {}
+
+    /**
+     * Teks ringkasan harian gabungan yang siap dibaca / dikirimkan.
+     */
+    public function summary(): string
+    {
+        if ($this->summary !== null && $this->summary !== '') {
+            return $this->summary;
+        }
+
+        $lines = [$this->headline];
+        foreach ($this->points as $p) {
+            if (! empty($p['text'])) {
+                $lines[] = $p['text'];
+            }
+        }
+        if ($this->rahinanNote !== null && $this->rahinanNote !== '') {
+            $lines[] = $this->rahinanNote;
+        }
+
+        return implode(' ', $lines);
+    }
 
     /**
      * @return list<int>
@@ -47,7 +70,12 @@ final readonly class DailyBrief
      */
     public function content(): array
     {
-        return ['headline' => $this->headline, 'points' => $this->points, 'rahinan_note' => $this->rahinanNote];
+        return [
+            'headline' => $this->headline,
+            'points' => $this->points,
+            'rahinan_note' => $this->rahinanNote,
+            'summary' => $this->summary(),
+        ];
     }
 
     /**
@@ -57,6 +85,7 @@ final readonly class DailyBrief
     {
         return $this->content() + [
             'date' => $this->date,
+            'summary' => $this->summary(),
             'generated_by' => $this->generatedBy,
             'model' => $this->model,
             'prompt_version' => $this->promptVersion,

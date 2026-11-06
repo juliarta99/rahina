@@ -119,6 +119,16 @@ final class BuildDailyBriefAction
         $row = DB::table('daily_briefs')
             ->where('date', $date)->where('persona', DailyBrief::SCOPE)->where('prompt_version', $versionTag)
             ->first();
+
+        // Hemat token AI: bila ringkasan untuk tanggal ini sudah ada di database (apapun versi prompt-nya),
+        // gunakan data yang tersimpan agar tidak memanggil Gemini API berulang kali.
+        if ($row === null) {
+            $row = DB::table('daily_briefs')
+                ->where('date', $date)->where('persona', DailyBrief::SCOPE)
+                ->orderByDesc('created_at')
+                ->first();
+        }
+
         if ($row === null) {
             return null;
         }
@@ -136,9 +146,10 @@ final class BuildDailyBriefAction
             headline: $content['headline'],
             points: $points,
             rahinanNote: is_string($content['rahinan_note'] ?? null) ? $content['rahinan_note'] : null,
-            generatedBy: DailyBrief::BY_AI,
+            generatedBy: (string) $row->model === 'template' ? DailyBrief::BY_TEMPLATE : DailyBrief::BY_AI,
             model: (string) $row->model,
-            promptVersion: $versionTag,
+            promptVersion: (string) ($row->prompt_version ?? $versionTag),
+            summary: is_string($row->summary ?? null) ? $row->summary : null,
         );
     }
 
@@ -149,9 +160,10 @@ final class BuildDailyBriefAction
             'persona' => DailyBrief::SCOPE,
             'prompt_version' => $brief->promptVersion,
             'content' => json_encode($brief->content(), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+            'summary' => $brief->summary(),
             'rule_ids' => json_encode($brief->ruleIds(), JSON_THROW_ON_ERROR),
             'model' => mb_substr($brief->model, 0, 64),
             'created_at' => now(),
-        ]], ['date', 'persona', 'prompt_version'], ['content', 'rule_ids', 'model', 'created_at']);
+        ]], ['date', 'persona', 'prompt_version'], ['content', 'summary', 'rule_ids', 'model', 'created_at']);
     }
 }
