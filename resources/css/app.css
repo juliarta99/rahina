@@ -8,14 +8,36 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+    /* Rahina - docs/DESIGN_SYSTEM.md §11 (Palet Maskot: Terakota #8C321B & Emas #F7C04A) */
+    --color-mangsi: #1c1b19;
+    --color-kertas: #fffdf8;
+    --color-lontar: #f6f1e7;
+    --color-abu-600: #66615a;
+    --color-abu-400: #a39d93;
+    --color-abu-200: #ddd6c9;
+    --color-nila: #8C321B;
+    --color-nila-700: #6B2311;
+    --color-nila-100: #F9EBE7;
+    --color-kunyit: #F7C04A;
+    --color-kunyit-800: #7A560A;
+    --color-kunyit-100: #FEF7E6;
+    --color-terakota: #8C321B;
+    --color-emas: #F7C04A;
+    --color-ayu: #2e7049;
+    --color-ayu-100: #ddede2;
+    --color-ala: #a8352b;
+    --color-ala-100: #f6dcd8;
+    --color-campur: #8a5a14;
 
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
+    --font-sans: 'Public Sans', ui-sans-serif, sans-serif;
+    --font-display: 'Spectral', Georgia, serif;
+    --font-aksara: 'Noto Sans Balinese', serif;
+
+    --ease-rahina: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -68,19 +90,19 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
+    --primary: #8C321B; /* warna utama maskot (#8C321B) */
+    --primary-foreground: #ffffff;
+    --secondary: #F7C04A; /* warna aksen emas maskot (#F7C04A) */
+    --secondary-foreground: #1c1b19;
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
+    --accent: #FEF7E6;
+    --accent-foreground: #8C321B;
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(0.577 0.245 27.325);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
+    --ring: #8C321B;
     --chart-1: oklch(0.646 0.222 41.116);
     --chart-2: oklch(0.6 0.118 184.704);
     --chart-3: oklch(0.398 0.07 227.392);
@@ -141,3 +163,43 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Animasi Blok-Blok Bergelombang (Wave Skeleton Shimmer) */
+@keyframes shimmerWave {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes waveBar {
+    0%, 100% {
+        transform: scaleY(0.35);
+        opacity: 0.4;
+    }
+    50% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+.animate-shimmer-wave {
+    background: linear-gradient(
+        90deg,
+        rgba(221, 214, 201, 0.45) 0%,
+        rgba(247, 192, 74, 0.35) 30%,
+        rgba(140, 50, 27, 0.18) 50%,
+        rgba(247, 192, 74, 0.35) 70%,
+        rgba(221, 214, 201, 0.45) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmerWave 2s ease-in-out infinite;
+}
+
+.animate-wave-bar {
+    transform-origin: bottom;
+    animation: waveBar 1.2s ease-in-out infinite;
+}
+

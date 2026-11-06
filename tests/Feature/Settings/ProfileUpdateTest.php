@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\WhatsappSubscription;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -12,14 +13,14 @@ test('profile page is displayed', function () {
     $response->assertOk();
 });
 
-test('profile information can be updated', function () {
+test('nama dan nomor HP bisa diubah (dinormalkan ke 62)', function () {
     $user = User::factory()->create();
 
     $response = $this
         ->actingAs($user)
         ->patch(route('profile.update'), [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Penguji',
+            'phone' => '0812 9999 0000',
         ]);
 
     $response
@@ -28,26 +29,26 @@ test('profile information can be updated', function () {
 
     $user->refresh();
 
-    expect($user->name)->toBe('Test User');
-    expect($user->email)->toBe('test@example.com');
-    expect($user->email_verified_at)->toBeNull();
+    expect($user->name)->toBe('Penguji');
+    expect($user->phone)->toBe('6281299990000');
 });
 
-test('email verification status is unchanged when the email address is unchanged', function () {
+test('mengganti nomor HP memutus langganan WhatsApp lama', function () {
     $user = User::factory()->create();
+    WhatsappSubscription::query()->create(['user_id' => $user->id, 'status' => 'active', 'consent_daily_at' => now()]);
 
-    $response = $this
-        ->actingAs($user)
-        ->patch(route('profile.update'), [
-            'name' => 'Test User',
-            'email' => $user->email,
-        ]);
+    $this->actingAs($user)->patch(route('profile.update'), ['name' => $user->name, 'phone' => '081299990000'])->assertSessionHasNoErrors();
 
-    $response
-        ->assertSessionHasNoErrors()
-        ->assertRedirect(route('profile.edit'));
+    expect(WhatsappSubscription::query()->count())->toBe(0);
+});
 
-    expect($user->refresh()->email_verified_at)->not->toBeNull();
+test('menyimpan nomor yang sama tidak memutus langganan', function () {
+    $user = User::factory()->create();
+    WhatsappSubscription::query()->create(['user_id' => $user->id, 'status' => 'active', 'consent_daily_at' => now()]);
+
+    $this->actingAs($user)->patch(route('profile.update'), ['name' => 'Baru', 'phone' => $user->phone])->assertSessionHasNoErrors();
+
+    expect(WhatsappSubscription::query()->count())->toBe(1);
 });
 
 test('user can delete their account', function () {

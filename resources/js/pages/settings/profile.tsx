@@ -1,138 +1,102 @@
 import { Form, Head, usePage } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
-import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/profile';
+import { id } from '@/lang/id';
 import type { Auth } from '@/types';
-import { send } from '@/routes/verification';
 
 type PageProps = {
     auth: Auth;
 };
 
-export default function Profile({
-    mustVerifyEmail,
-    status,
-}: {
-    mustVerifyEmail: boolean;
-    status?: string;
-}) {
+/** Pengaturan akun: nama & nomor HP (identitas masuk). */
+export default function Profile() {
     const { auth } = usePage<PageProps>().props;
+    const t = id.auth;
 
     return (
-        <>
-            <Head title="Profile settings" />
+        <div className="flex flex-col gap-6">
+            <Head title="Pengaturan Akun" />
 
-            <h1 className="sr-only">Profile settings</h1>
-
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Profile"
-                    description="Update your name and email address"
-                />
+            <section className="flex flex-col gap-4 rounded-lg border border-abu-200 bg-kertas p-5">
+                <div>
+                    <h2 className="font-display text-[22px] leading-7 font-semibold">
+                        Informasi Akun
+                    </h2>
+                    <p className="mt-1 text-sm text-abu-600">
+                        Ubah nama tampilan dan nomor HP yang digunakan untuk masuk ke akun Rahina.
+                    </p>
+                </div>
 
                 <Form
                     {...ProfileController.update.form()}
                     options={{
                         preserveScroll: true,
                     }}
-                    className="space-y-6"
+                    className="space-y-4"
                 >
                     {({ processing, errors }) => (
                         <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="name">{t.name}</Label>
 
                                 <Input
                                     id="name"
-                                    className="mt-1 block w-full"
+                                    className="h-11 border-abu-200 bg-kertas focus-visible:border-nila"
                                     defaultValue={auth.user.name}
                                     name="name"
                                     required
                                     autoComplete="name"
-                                    placeholder="Full name"
+                                    placeholder={t.namePlaceholder}
                                 />
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.name}
-                                />
+                                <InputError message={errors.name} />
                             </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="phone">{t.phone}</Label>
 
                                 <Input
-                                    id="email"
-                                    type="email"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.email}
-                                    name="email"
+                                    id="phone"
+                                    type="tel"
+                                    inputMode="tel"
+                                    className="h-11 border-abu-200 bg-kertas focus-visible:border-nila"
+                                    defaultValue={
+                                        typeof auth.user.phone === 'string'
+                                            ? `0${auth.user.phone.slice(2)}`
+                                            : ''
+                                    }
+                                    name="phone"
                                     required
-                                    autoComplete="username"
-                                    placeholder="Email address"
+                                    autoComplete="tel"
+                                    placeholder={t.phonePlaceholder}
                                 />
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.email}
-                                />
+                                <p className="text-xs text-abu-600">
+                                    Nomor ini digunakan untuk masuk ke akun Rahina. Jika Anda mengganti nomor akun, langganan WhatsApp lama akan diputus agar dapat dihubungkan kembali dengan nomor baru.
+                                </p>
+
+                                <InputError message={errors.phone} />
                             </div>
 
-                            {mustVerifyEmail &&
-                                auth.user.email_verified_at === null && (
-                                    <div>
-                                        <p className="-mt-4 text-sm text-muted-foreground">
-                                            Your email address is unverified.{' '}
-                                            <Link
-                                                href={send()}
-                                                as="button"
-                                                className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-                                            >
-                                                Click here to re-send the
-                                                verification email.
-                                            </Link>
-                                        </p>
-
-                                        {status ===
-                                            'verification-link-sent' && (
-                                            <div className="mt-2 text-sm font-medium text-green-600">
-                                                A new verification link has been
-                                                sent to your email address.
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
-                            <div className="flex items-center gap-4">
+                            <div className="pt-2">
                                 <Button
                                     disabled={processing}
                                     data-test="update-profile-button"
+                                    className="h-11 bg-nila px-5 font-medium text-white hover:bg-nila-700"
                                 >
-                                    Save
+                                    Simpan Perubahan
                                 </Button>
                             </div>
                         </>
                     )}
                 </Form>
-            </div>
+            </section>
 
             <DeleteUser />
-        </>
+        </div>
     );
 }
-
-Profile.layout = {
-    breadcrumbs: [
-        {
-            title: 'Profile settings',
-            href: edit(),
-        },
-    ],
-};

@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { LogOut, Settings } from 'lucide-react';
+import { SignOut as LogOut, Gear as Settings } from '@phosphor-icons/react';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,

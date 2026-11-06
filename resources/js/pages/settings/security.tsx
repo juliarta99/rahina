@@ -1,39 +1,34 @@
 import { Form, Head } from '@inertiajs/react';
 import { useRef } from 'react';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
-import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
+import type { Props as ManageTwoFactorProps } from '@/components/manage-two-factor';
+import ManageTwoFactor from '@/components/manage-two-factor';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/security';
-import type { Props as ManagePasskeysProps } from '@/components/manage-passkeys';
-import ManagePasskeys from '@/components/manage-passkeys';
-import type { Props as ManageTwoFactorProps } from '@/components/manage-two-factor';
-import ManageTwoFactor from '@/components/manage-two-factor';
 
-// oxfmt-ignore
 type Props = {
     passwordRules: string;
-} & ManagePasskeysProps &
-    ManageTwoFactorProps;
+} & ManageTwoFactorProps;
 
 export default function Security(props: Props) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
     return (
-        <>
-            <Head title="Security settings" />
+        <div className="flex flex-col gap-6">
+            <Head title="Keamanan & Kata Sandi" />
 
-            <h1 className="sr-only">Security settings</h1>
-
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Update password"
-                    description="Ensure your account is using a long, random password to stay secure"
-                />
+            <section className="flex flex-col gap-4 rounded-lg border border-abu-200 bg-kertas p-5">
+                <div>
+                    <h2 className="font-display text-[22px] leading-7 font-semibold">
+                        Ubah Kata Sandi
+                    </h2>
+                    <p className="mt-1 text-sm text-abu-600">
+                        Pastikan akun Anda menggunakan kata sandi yang kuat dan aman untuk menjaga keamanan data.
+                    </p>
+                </div>
 
                 <Form
                     {...SecurityController.update.form()}
@@ -55,54 +50,54 @@ export default function Security(props: Props) {
                             currentPasswordInput.current?.focus();
                         }
                     }}
-                    className="space-y-6"
+                    className="space-y-4"
                 >
                     {({ errors, processing }) => (
                         <>
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="current_password">
-                                    Current password
+                                    Kata Sandi Saat Ini
                                 </Label>
 
                                 <PasswordInput
                                     id="current_password"
                                     ref={currentPasswordInput}
                                     name="current_password"
-                                    className="mt-1 block w-full"
+                                    className="h-11 border-abu-200 bg-kertas focus-visible:border-nila"
                                     autoComplete="current-password"
-                                    placeholder="Current password"
+                                    placeholder="Masukkan kata sandi saat ini"
                                 />
 
                                 <InputError message={errors.current_password} />
                             </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">New password</Label>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="password">Kata Sandi Baru</Label>
 
                                 <PasswordInput
                                     id="password"
                                     ref={passwordInput}
                                     name="password"
-                                    className="mt-1 block w-full"
+                                    className="h-11 border-abu-200 bg-kertas focus-visible:border-nila"
                                     autoComplete="new-password"
-                                    placeholder="New password"
+                                    placeholder="Masukkan kata sandi baru"
                                     passwordrules={props.passwordRules}
                                 />
 
                                 <InputError message={errors.password} />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="password_confirmation">
-                                    Confirm password
+                                    Konfirmasi Kata Sandi Baru
                                 </Label>
 
                                 <PasswordInput
                                     id="password_confirmation"
                                     name="password_confirmation"
-                                    className="mt-1 block w-full"
+                                    className="h-11 border-abu-200 bg-kertas focus-visible:border-nila"
                                     autoComplete="new-password"
-                                    placeholder="Confirm password"
+                                    placeholder="Ulangi kata sandi baru"
                                     passwordrules={props.passwordRules}
                                 />
 
@@ -111,38 +106,25 @@ export default function Security(props: Props) {
                                 />
                             </div>
 
-                            <div className="flex items-center gap-4">
+                            <div className="pt-2">
                                 <Button
                                     disabled={processing}
                                     data-test="update-password-button"
+                                    className="h-11 bg-nila px-5 font-medium text-white hover:bg-nila-700"
                                 >
-                                    Save
+                                    Perbarui Kata Sandi
                                 </Button>
                             </div>
                         </>
                     )}
                 </Form>
-            </div>
+            </section>
 
             <ManageTwoFactor
                 canManageTwoFactor={props.canManageTwoFactor}
                 requiresConfirmation={props.requiresConfirmation}
                 twoFactorEnabled={props.twoFactorEnabled}
             />
-
-            <ManagePasskeys
-                canManagePasskeys={props.canManagePasskeys}
-                passkeys={props.passkeys}
-            />
-        </>
+        </div>
     );
 }
-
-Security.layout = {
-    breadcrumbs: [
-        {
-            title: 'Security settings',
-            href: edit(),
-        },
-    ],
-};

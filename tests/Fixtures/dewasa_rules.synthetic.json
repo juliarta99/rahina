@@ -1,0 +1,72 @@
+{
+    "_note": "ATURAN SINTETIS KHUSUS TEST. Bukan dewasa asli, tidak boleh dipakai di produksi. Kondisinya dipilih agar cocok dengan tanggal acuan yang sudah diketahui (Galungan, Nyepi, Saraswati/Tumpek Landep) supaya hasil engine bisa dicek.",
+    "rules": [
+        {
+            "code": "test_sintetis_buda_kliwon",
+            "name": "[[DEWASA:SINTETIS_A]]",
+            "summary": "Aturan sintetis untuk test: cocok setiap Buda Kliwon.",
+            "verdict": "ayu",
+            "alahing_level": 3,
+            "conditions": {
+                "all": [
+                    { "field": "saptawara", "in": ["Buda"] },
+                    { "field": "pancawara", "eq": "Kliwon" }
+                ]
+            },
+            "source": "ardhana-2005",
+            "source_page": "TEST",
+            "effects": [
+                { "category": "pertanian.padi", "effect": "baik" },
+                { "category": "dagang.buka_usaha", "effect": "tidak_baik" }
+            ],
+            "validated_by": "test",
+            "validated_at": "2026-11-05T00:00:00+08:00"
+        },
+        {
+            "code": "test_sintetis_awal_kadasa",
+            "name": "[[DEWASA:SINTETIS_B]]",
+            "summary": "Aturan sintetis untuk test: penanggal 1-3 sasih Kadasa, belum divalidasi.",
+            "verdict": "ala",
+            "alahing_level": null,
+            "conditions": {
+                "all": [
+                    { "field": "sasih", "in": ["Kadasa"] },
+                    {
+                        "field": "sasih_day",
+                        "between": [1, 3],
+                        "with": { "is_penanggal": true }
+                    }
+                ]
+            },
+            "source": "ardhana-2005",
+            "source_page": "TEST",
+            "effects": [{ "category": "pembangunan", "effect": "tidak_baik" }]
+        },
+        {
+            "code": "test_sintetis_saniscara_bukan_kuningan",
+            "name": "[[DEWASA:SINTETIS_C]]",
+            "summary": "Aturan sintetis untuk test: Saniscara selain wuku Kuningan.",
+            "verdict": "campur",
+            "alahing_level": 1,
+            "conditions": {
+                "all": [
+                    { "field": "saptawara", "eq": "Saniscara" },
+                    { "not": { "field": "wuku", "in": ["Kuningan"] } }
+                ]
+            },
+            "source": "ardhana-2005",
+            "source_page": "TEST",
+            "effects": [{ "category": "aneka", "effect": "baik" }],
+            "validated_by": "test",
+            "validated_at": "2026-11-05T00:00:00+08:00"
+        }
+    ],
+    "precedence": [
+        {
+            "layer": "wewaran",
+            "rank": 1,
+            "source": "ardhana-2005",
+            "source_page": "TEST"
+        }
+    ]
+}

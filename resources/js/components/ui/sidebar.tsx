@@ -1,7 +1,7 @@
 import { Slot } from "@radix-ui/react-slot"
 import type { VariantProps} from "class-variance-authority";
 import { cva } from "class-variance-authority"
-import { PanelLeftCloseIcon, PanelLeftOpenIcon } from "lucide-react"
+import { SidebarSimple as PanelLeftCloseIcon, SidebarSimple as PanelLeftOpenIcon } from "@phosphor-icons/react";
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"

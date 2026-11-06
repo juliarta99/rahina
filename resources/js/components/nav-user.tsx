@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/react';
-import { ChevronsUpDown } from 'lucide-react';
+import { CaretUpDown as ChevronsUpDown } from '@phosphor-icons/react';
 import {
     DropdownMenu,
     DropdownMenuContent,

@@ -1,0 +1,22 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "role": "model",
+                "parts": [
+                    {
+                        "text": "__TEXT__"
+                    }
+                ]
+            },
+            "finishReason": "STOP",
+            "index": 0
+        }
+    ],
+    "modelVersion": "test-model-001",
+    "usageMetadata": {
+        "promptTokenCount": 420,
+        "candidatesTokenCount": 120,
+        "totalTokenCount": 540
+    }
+}
