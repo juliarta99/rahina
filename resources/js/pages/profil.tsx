@@ -82,7 +82,10 @@ export default function Profil({
 
     return (
         <div className="min-h-screen bg-lontar font-sans text-mangsi">
-            <Head title={t.title} />
+            <Head>
+                <title>{`${t.title} - Rahina`}</title>
+                <meta name="robots" content="noindex, nofollow" />
+            </Head>
 
             <RahinaHeader current="profile" />
 

@@ -97,7 +97,28 @@ export default function Welcome({
 
     return (
         <div className="min-h-screen bg-kertas font-sans text-mangsi selection:bg-kunyit-100 selection:text-nila">
-            <Head title="Rahina - Sistem Kalender Bali, Dewasa Ayu & Tanya Wariga AI" />
+            <Head>
+                <title>Rahina - Sistem Kalender Bali, Dewasa Ayu & Tanya Wariga AI</title>
+                <meta
+                    name="description"
+                    content="Aplikasi kalender Bali. Cek wewaran, 30 wuku, dewasa ayu (hari baik), konsultasi asisten Tanya Wariga AI, dan pengingat WhatsApp harian."
+                />
+                <link rel="canonical" href="/" />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'FAQPage',
+                        mainEntity: faqs.map((f) => ({
+                            '@type': 'Question',
+                            name: f.q,
+                            acceptedAnswer: {
+                                '@type': 'Answer',
+                                text: f.a,
+                            },
+                        })),
+                    })}
+                </script>
+            </Head>
 
             {/* Header Terpadu */}
             <RahinaHeader current="home" />
@@ -494,7 +515,7 @@ export default function Welcome({
                         Mulai Eksplorasi Kalender & Hari Baik Anda Hari Ini
                     </h2>
                     <p className="mt-3 text-sm text-abu-600 sm:text-base">
-                        Akses kalender Saka 2020-2035 secara instan atau konsultasikan kebutuhan kegiatan Anda langsung dengan Tanya Wariga.
+                        Akses kalender secara instan atau konsultasikan kebutuhan kegiatan Anda langsung dengan Tanya Wariga.
                     </p>
 
                     <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">

@@ -20,7 +20,13 @@ export default function Register({ passwordRules }: Props) {
 
     return (
         <>
-            <Head title={t.registerTitle} />
+            <Head>
+                <title>{`${t.registerTitle} - Rahina`}</title>
+                <meta
+                    name="description"
+                    content="Daftar akun Rahina gratis. Cukup masukkan nama dan nomor WhatsApp aktif untuk menerima kabar rahinan otomatis setiap pagi."
+                />
+            </Head>
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}

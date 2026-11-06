@@ -163,7 +163,13 @@ export default function Ask(_props: AskPageProps) {
 
     return (
         <div className="min-h-screen bg-lontar font-sans text-mangsi">
-            <Head title={id.ask.title}>
+            <Head>
+                <title>Tanya Wariga AI - Konsultasi Hari Baik & Astrologi Bali - Rahina</title>
+                <meta
+                    name="description"
+                    content="Asisten AI cerdas untuk bertanya seputar kalender Bali, hari baik (dewasa ayu), makna wuku, zodiak bintang, otonan, dan kearifan Lontar Sundarigama."
+                />
+                <link rel="canonical" href="/tanya" />
                 <link rel="preload" as="image" href="/assets/images/maskots/waiting.png" />
                 <link rel="preload" as="image" href="/assets/images/maskots/success.png" />
                 <link rel="preload" as="image" href="/assets/images/maskots/choose.png" />

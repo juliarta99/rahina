@@ -86,7 +86,14 @@ export default function Calendar({
 
     return (
         <div className="min-h-screen bg-lontar font-sans text-mangsi">
-            <Head title={id.calendar.title} />
+            <Head>
+                <title>{`Kalender Bali ${title} & Dewasa Ayu - Rahina`}</title>
+                <meta
+                    name="description"
+                    content={`Kalender Bali bulan ${title} Saka. Dilengkapi rincian Purnama, Tilem, Kajeng Kliwon, wewaran, 30 wuku, dan perhitungan dewasa ayu (hari baik).`}
+                />
+                <link rel="canonical" href={`/kalender?bulan=${month}`} />
+            </Head>
 
             <RahinaHeader current="calendar" />
 

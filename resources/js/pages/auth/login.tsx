@@ -21,7 +21,13 @@ export default function Login({ status }: Props) {
 
     return (
         <>
-            <Head title={t.loginTitle} />
+            <Head>
+                <title>{`${t.loginTitle} - Rahina`}</title>
+                <meta
+                    name="description"
+                    content="Masuk ke akun Rahina untuk mengelola notifikasi WhatsApp ringkasan harian kalender Bali dan preferensi waktu pengiriman."
+                />
+            </Head>
 
             <Form
                 {...store.form()}

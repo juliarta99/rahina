@@ -1,2 +1,8 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /webhooks/
+Disallow: /settings/
+Disallow: /confirm-password
+Disallow: /two-factor-challenge
+
+Sitemap: /sitemap.xml

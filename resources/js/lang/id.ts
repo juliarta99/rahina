@@ -209,7 +209,7 @@ export const id = {
                 icon: 'pembangunan',
                 text: 'Hari baik mulai bangun rumah bulan Desember',
             },
-            { icon: 'jodoh', text: 'Kecocokan jodoh Minggu Pon dan Senin Kliwon' },
+            { icon: 'jodoh', text: 'Kecocokan 11 Mei 2006 dan 20 Agustus 2006' },
             { icon: 'bintang', text: 'Karakter bintang kelahiran 15 Mei' },
             { icon: 'upacara', text: 'Hari baik pawiwahan awal tahun depan' },
         ],
