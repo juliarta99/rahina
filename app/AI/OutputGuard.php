@@ -294,8 +294,19 @@ final class OutputGuard
         if (preg_match_all("/\b(\d{1,2})\s+({$months})\b(?:\s+(\d{4}))?/iu", $text, $named, PREG_SET_ORDER) > 0) {
             foreach ($named as $m) {
                 $month = self::MONTHS[mb_strtolower($m[2])];
-                $hit = array_filter($allowed, fn (string $d): bool => (int) substr($d, 8, 2) === (int) $m[1]
-                    && (int) substr($d, 5, 2) === $month && (! isset($m[3]) || (int) substr($d, 0, 4) === (int) $m[3]));
+                $hit = array_filter($allowed, function (string $d) use ($m, $month): bool {
+                    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $d, $matches)) {
+                        return (int) $matches[3] === (int) $m[1]
+                            && (int) $matches[2] === $month
+                            && (! isset($m[3]) || (int) $matches[1] === (int) $m[3]);
+                    }
+                    if (preg_match('/^(\d{2})-(\d{2})$/', $d, $matches)) {
+                        return (int) $matches[2] === (int) $m[1]
+                            && (int) $matches[1] === $month;
+                    }
+
+                    return false;
+                });
                 if ($hit === []) {
                     return true;
                 }

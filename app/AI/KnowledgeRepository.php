@@ -184,16 +184,24 @@ final class KnowledgeRepository
         $urip2 = $this->getUripForDate($d2->toDateString());
 
         $totalUrip = $urip1['total'] + $urip2['total'];
-        $sisa = $totalUrip % 16; // 0 dianggap sisa 16
+        $rawSisa = $totalUrip % 16;
+        $sisa = $rawSisa === 0 ? 16 : $rawSisa;
 
         $jodohData = $this->allJodoh();
         $rule = null;
         foreach ($jodohData['rules'] ?? [] as $r) {
-            if ((int) $r['sisa'] === $sisa) {
+            if ((int) $r['sisa'] === $sisa || ((int) $r['sisa'] === 0 && $sisa === 16)) {
                 $rule = $r;
                 break;
             }
         }
+
+        $verdict = $rule['verdict'] ?? 'campur';
+        $kategoriLabel = match ($verdict) {
+            'ayu' => 'Baik / Rukun & Bahagia',
+            'campur' => 'Suka Duka Berimbang',
+            default => 'Kurang Baik / Perlu Kehati-hatian',
+        };
 
         return [
             'person1' => [
@@ -219,9 +227,10 @@ final class KnowledgeRepository
             'total_urip' => $totalUrip,
             'modulo' => 16,
             'sisa' => $sisa,
-            'sisa_label' => $sisa === 0 ? 'Sisa 0 / 16' : "Sisa {$sisa}",
+            'sisa_label' => $sisa === 16 ? 'Sisa 16 (0)' : "Sisa {$sisa}",
             'ramalan' => $rule['ramalan'] ?? 'Tidak ada data spesifik untuk sisa ini.',
-            'verdict' => $rule['verdict'] ?? 'campur',
+            'verdict' => $verdict,
+            'kategori' => $kategoriLabel,
             'cultural_notice' => true,
             'source' => 'Lontar Tri Pramana (Kalender Bali)',
         ];
@@ -229,6 +238,7 @@ final class KnowledgeRepository
 
     /**
      * Hitung urip (Pancawara, Sadwara, Saptawara) untuk satu tanggal.
+     * Menggunakan komputasi kalender Pawukon deterministik yang berlaku untuk tahun berapa pun.
      *
      * @return array{saptawara: string, saptawara_urip: int, pancawara: string, pancawara_urip: int, sadwara: string, sadwara_urip: int, total: int}
      */
@@ -238,25 +248,49 @@ final class KnowledgeRepository
         $sadwaraUrip = ['Tungleh' => 7, 'Aryang' => 6, 'Urukung' => 5, 'Paniron' => 8, 'Was' => 9, 'Maulu' => 3];
         $saptawaraUrip = ['Redite' => 5, 'Soma' => 4, 'Anggara' => 3, 'Buda' => 7, 'Wraspati' => 8, 'Sukra' => 6, 'Saniscara' => 9];
 
-        $sapta = 'Redite';
-        $panca = 'Umanis';
-        $sad = 'Tungleh';
+        $pancawaraList = ['Umanis', 'Paing', 'Pon', 'Wage', 'Kliwon'];
+        $sadwaraList = ['Tungleh', 'Aryang', 'Urukung', 'Paniron', 'Was', 'Maulu'];
+        $saptaNames = ['Redite', 'Soma', 'Anggara', 'Buda', 'Wraspati', 'Sukra', 'Saniscara'];
 
-        if ($this->calendar !== null) {
-            $day = $this->calendar->day($date);
-            if ($day !== null) {
-                $sapta = $day->saptawara() !== '' ? $day->saptawara() : $sapta;
-                $panca = $day->pancawara() !== '' ? $day->pancawara() : $panca;
-                $sad = $day->wewaran['sadwara']->name ?? $sad;
+        $carbon = CarbonImmutable::parse($date);
+        $sapta = null;
+        $panca = null;
+        $sad = null;
+
+        // 1. Jika tahun berada pada database kalender aktif (2020-2035), baca langsung
+        $year = (int) $carbon->format('Y');
+        if ($this->calendar !== null && $year >= 2020 && $year <= 2035) {
+            try {
+                $day = $this->calendar->day($carbon->toDateString());
+                if ($day !== null) {
+                    $sapta = $day->saptawara() !== '' ? $day->saptawara() : null;
+                    $panca = $day->pancawara() !== '' ? $day->pancawara() : null;
+                    $sad = $day->wewaran['sadwara']->name ?? null;
+                }
+            } catch (\Throwable) {
+                // Abaikan jika koneksi db kalender tidak siap
             }
         }
 
-        // Fallback hitung jika calendar repository belum melingkupi tanggal tersebut
-        if (! isset($saptawaraUrip[$sapta])) {
-            $carbon = CarbonImmutable::parse($date);
-            $dayOfWeek = (int) $carbon->format('w'); // 0 = Sunday = Redite
-            $saptaNames = ['Redite', 'Soma', 'Anggara', 'Buda', 'Wraspati', 'Sukra', 'Saniscara'];
-            $sapta = $saptaNames[$dayOfWeek];
+        // 2. Hitung matematis Pawukon Bali deterministik (referensi baku 2000-01-01)
+        // 2000-01-01: Saniscara (6), Umanis (0), Paniron (3)
+        if ($sapta === null) {
+            $sapta = $saptaNames[(int) $carbon->format('w')];
+        }
+
+        if ($panca === null || $sad === null) {
+            $ref = CarbonImmutable::parse('2000-01-01');
+            $diffDays = (int) $ref->diffInDays($carbon, false);
+
+            if ($panca === null) {
+                $pancaIdx = ((($diffDays % 5) + 5) % 5);
+                $panca = $pancawaraList[$pancaIdx];
+            }
+
+            if ($sad === null) {
+                $sadIdx = (((($diffDays + 3) % 6) + 6) % 6);
+                $sad = $sadwaraList[$sadIdx];
+            }
         }
 
         $sUrip = $saptawaraUrip[$sapta] ?? 5;
@@ -417,27 +451,91 @@ final class KnowledgeRepository
         $this->ragIndex = $docs;
     }
 
+    /**
+     * Ekstrak semua tanggal yang ada di dalam teks input (format ISO YYYY-MM-DD, DD/MM/YYYY, atau DD Bulan YYYY).
+     *
+     * @return list<CarbonImmutable>
+     */
+    public function parseAllDates(string $str): array
+    {
+        $clean = trim($str);
+        if ($clean === '') {
+            return [];
+        }
+
+        $idToEn = [
+            'januari' => 'January', 'februari' => 'February', 'pebruari' => 'February',
+            'maret' => 'March', 'april' => 'April', 'mei' => 'May',
+            'juni' => 'June', 'juli' => 'July', 'agustus' => 'August',
+            'september' => 'September', 'oktober' => 'October',
+            'nopember' => 'November', 'november' => 'November', 'desember' => 'December',
+        ];
+
+        $dates = [];
+        $seen = [];
+
+        // 1. Pola ISO YYYY-MM-DD atau YYYY/MM/DD
+        if (preg_match_all('/\b(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})\b/u', $clean, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $m) {
+                try {
+                    $c = CarbonImmutable::createFromDate((int) $m[1], (int) $m[2], (int) $m[3]);
+                    $iso = $c->toDateString();
+                    if (! isset($seen[$iso])) {
+                        $seen[$iso] = true;
+                        $dates[] = $c;
+                    }
+                } catch (\Throwable) {
+                }
+            }
+        }
+
+        // 2. Pola DD Bulan YYYY (misal "15 Mei 1998" atau "20 Oktober 1999")
+        $monthPattern = implode('|', array_keys($idToEn));
+        if (preg_match_all('/\b(\d{1,2})\s+('.$monthPattern.')\s+(\d{4})\b/iu', $clean, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $m) {
+                $enMonth = $idToEn[mb_strtolower($m[2])];
+                try {
+                    $c = CarbonImmutable::parse("{$m[1]} {$enMonth} {$m[3]}");
+                    $iso = $c->toDateString();
+                    if (! isset($seen[$iso])) {
+                        $seen[$iso] = true;
+                        $dates[] = $c;
+                    }
+                } catch (\Throwable) {
+                }
+            }
+        }
+
+        // 3. Pola DD-MM-YYYY atau DD/MM/YYYY
+        if (preg_match_all('/\b(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})\b/u', $clean, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $m) {
+                try {
+                    $c = CarbonImmutable::createFromDate((int) $m[3], (int) $m[2], (int) $m[1]);
+                    $iso = $c->toDateString();
+                    if (! isset($seen[$iso])) {
+                        $seen[$iso] = true;
+                        $dates[] = $c;
+                    }
+                } catch (\Throwable) {
+                }
+            }
+        }
+
+        return $dates;
+    }
+
     public function parseDate(string $str): ?CarbonImmutable
     {
+        $all = $this->parseAllDates($str);
+        if ($all !== []) {
+            return $all[0];
+        }
+
         $clean = trim($str);
         if ($clean === '') {
             return null;
         }
 
-        // Ekstrak pola tanggal YYYY-MM-DD
-        if (preg_match('/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/u', $clean, $matches)) {
-            $clean = $matches[0];
-        }
-        // Ekstrak pola tanggal DD Month YYYY (misal "29 Januari 2006")
-        elseif (preg_match('/\b(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})\b/u', $clean, $matches)) {
-            $clean = $matches[0];
-        }
-        // Ekstrak pola tanggal DD Month tanpa tahun (misal "29 Januari")
-        elseif (preg_match('/\b(\d{1,2})\s+([a-zA-Z]+)\b/u', $clean, $matches)) {
-            $clean = $matches[0];
-        }
-
-        // Terjemahkan nama bulan Indonesia ke Inggris untuk Carbon/strtotime
         $idToEn = [
             'januari' => 'January',
             'februari' => 'February',
@@ -454,6 +552,17 @@ final class KnowledgeRepository
             'november' => 'November',
             'desember' => 'December',
         ];
+
+        // Ekstrak pola tanggal DD Month tanpa tahun (misal "29 Januari")
+        $monthPattern = implode('|', array_keys($idToEn));
+        if (preg_match('/\b(\d{1,2})\s+('.$monthPattern.')\b/iu', $clean, $matches)) {
+            $enMonth = $idToEn[mb_strtolower($matches[2])];
+            try {
+                return CarbonImmutable::parse("{$matches[1]} {$enMonth}");
+            } catch (\Throwable) {
+                return null;
+            }
+        }
 
         $normalized = str_ireplace(array_keys($idToEn), array_values($idToEn), $clean);
 
@@ -513,6 +622,12 @@ final class KnowledgeRepository
         $allArti = $this->allArtiHari();
         $saptaDesc = $allArti['saptawara'][$saptaInfo['code']] ?? null;
 
+        $uripInfo = $this->getUripForDate($date->format('Y-m-d'));
+        $pancaName = $uripInfo['pancawara'];
+        $pancaDesc = $allArti['pancawara'][$pancaName] ?? null;
+        $sadName = $uripInfo['sadwara'];
+        $sadDesc = $allArti['sadwara'][$sadName] ?? null;
+
         $profile = [
             'birthdate' => $date->format('Y-m-d'),
             'birthdate_formatted' => $formattedDate,
@@ -523,13 +638,24 @@ final class KnowledgeRepository
                 'urip' => $saptaInfo['urip'],
                 'karakter' => $saptaDesc,
             ],
+            'pancawara' => [
+                'nama' => $pancaName,
+                'urip' => $uripInfo['pancawara_urip'],
+                'karakter' => $pancaDesc,
+            ],
+            'sadwara' => [
+                'nama' => $sadName,
+                'urip' => $uripInfo['sadwara_urip'],
+                'karakter' => $sadDesc,
+            ],
             'ringkasan_karakter' => sprintf(
-                'Kelahiran %s berbintang %s (%s) dengan Angka Garis Hidup %d. Lahir pada hari %s.',
+                'Kelahiran %s berbintang %s (%s) dengan Angka Garis Hidup %d. Lahir pada hari %s %s.',
                 $formattedDate,
                 $bintangData['name'] ?? '-',
                 $bintangData['dates'] ?? '-',
                 $lifeNumber,
-                $saptaInfo['name']
+                $saptaInfo['name'],
+                $pancaName
             ),
         ];
 

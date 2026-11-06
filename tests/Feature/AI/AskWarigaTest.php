@@ -347,6 +347,46 @@ it('meminta klarifikasi kepastian bila pertanyaan jodoh ambigu tanpa tanggal', f
         ->and($answer->answer)->toContain('tanggal lahir');
 });
 
+it('berhasil menghitung kecocokan jodoh dua tanggal tanpa tertahan guardrail', function (): void {
+    Http::fake([GEMINI_URL => Http::sequence()
+        ->push(geminiCall('consult_knowledge', [
+            'topic' => 'jodoh',
+            'birthdate' => '15 Mei 1998',
+            'partner_birthdate' => '20 Oktober 1999',
+        ]))
+        ->push(finalAnswer([
+            'answer' => 'Menurut ramalan Lontar Tri Pramana, pasangan kelahiran 15 Mei 1998 dan 20 Oktober 1999 memiliki total urip 39 dengan sisa 7 yang tergolong Baik / Rukun & Bahagia.',
+            'dates' => [],
+            'cultural_notice' => true,
+        ]))]);
+
+    $answer = ask('Bagaimana kecocokan jodoh antara kelahiran 15 Mei 1998 dan 20 Oktober 1999?');
+
+    expect($answer->generatedBy)->toBe('ai')
+        ->and($answer->answer)->toContain('15 Mei 1998')
+        ->and($answer->answer)->toContain('20 Oktober 1999')
+        ->and($answer->culturalNotice)->toBeTrue();
+});
+
+it('berhasil menjawab karakter kelahiran 29 Januari 2006 dengan zodiak Aquarius', function (): void {
+    Http::fake([GEMINI_URL => Http::sequence()
+        ->push(geminiCall('consult_knowledge', [
+            'topic' => 'arti_hari',
+            'query' => '29 Januari 2006',
+        ]))
+        ->push(finalAnswer([
+            'answer' => 'Kelahiran 29 Januari 2006 memiliki bintang Aquarius 20 Januari - 18 Februari dan Angka Garis Hidup 2, berwatak mandiri dan tenang.',
+            'dates' => [],
+            'cultural_notice' => true,
+        ]))]);
+
+    $answer = ask('Bagaimana sifat kelahiran tanggal 29 Januari 2006?');
+
+    expect($answer->generatedBy)->toBe('ai')
+        ->and($answer->answer)->toContain('Aquarius')
+        ->and($answer->answer)->toContain('29 Januari 2006');
+});
+
 describe('endpoint /tanya', function (): void {
     it('menampilkan halaman Tanya Wariga', function (): void {
         $this->get('/tanya')->assertOk()->assertInertia(fn ($page) => $page->component('ask')->missing('persona'));
