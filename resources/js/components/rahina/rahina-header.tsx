@@ -1,10 +1,10 @@
 import { BrandLogo } from '@/components/rahina/brand-logo';
-import { SiteNav } from '@/components/rahina/site-nav';
+import { NavCurrent, SiteNav } from '@/components/rahina/site-nav';
 
 export function RahinaHeader({
     current,
 }: {
-    current: 'home' | 'calendar' | 'ask' | 'profile';
+    current: NavCurrent;
 }) {
     return (
         <>

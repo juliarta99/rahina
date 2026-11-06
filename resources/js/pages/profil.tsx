@@ -14,6 +14,7 @@ import {
 import { useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
 import { RahinaHeader } from '@/components/rahina/rahina-header';
+import { SiteFooter } from '@/components/rahina/site-footer';
 import { id } from '@/lang/id';
 import { cn } from '@/lib/utils';
 import { logout } from '@/routes';
@@ -207,9 +208,7 @@ export default function Profil({
                 </Card>
             </main>
 
-            <footer className="pb-8 text-center text-[13px] leading-[18px] text-abu-600">
-                {id.disclaimer}
-            </footer>
+            <SiteFooter />
         </div>
     );
 }

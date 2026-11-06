@@ -29,4 +29,21 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response, Throwable $exception, Request $request) {
+            $code = $response->getStatusCode();
+            if (in_array($code, [500, 503, 404, 403], true)) {
+                if (! $request->expectsJson() && ($request->header('X-Inertia') || app()->environment('production', 'testing'))) {
+                    return inertia('error', ['status' => $code])
+                        ->toResponse($request)
+                        ->setStatusCode($code);
+                }
+            } elseif ($code === 419) {
+                return back()->with([
+                    'message' => 'Halaman telah kedaluwarsa, silakan muat ulang.',
+                ]);
+            }
+
+            return $response;
+        });
     })->create();

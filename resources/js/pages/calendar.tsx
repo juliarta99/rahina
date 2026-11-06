@@ -6,6 +6,7 @@ import { DayCell } from '@/components/rahina/day-cell';
 import { DayDialog } from '@/components/rahina/day-dialog';
 import { MoonFull, MoonNew } from '@/components/rahina/moon-phase';
 import { RahinaHeader } from '@/components/rahina/rahina-header';
+import { SiteFooter } from '@/components/rahina/site-footer';
 import { TodayPanel } from '@/components/rahina/today-panel';
 import { id } from '@/lang/id';
 import { cn } from '@/lib/utils';
@@ -237,9 +238,7 @@ export default function Calendar({
                 </section>
             </main>
 
-            <footer className="pb-8 text-center text-[13px] leading-[18px] text-abu-600">
-                {id.disclaimer}
-            </footer>
+            <SiteFooter />
 
             <DayDialog date={selected} onClose={() => setSelected(null)} />
         </div>
