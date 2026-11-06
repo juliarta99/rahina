@@ -1,4 +1,4 @@
-# EVAL_RESULTS.md — Tanya Wariga
+# EVAL_RESULTS.md - Tanya Wariga
 
 _Dihasilkan `php artisan wariga:eval` pada 2026-11-06 08:50:00 WITA · model `gemini-3.1-flash-lite` · prompt `agent_system.v1` · "hari ini" agent = 2026-11-06._
 
@@ -12,7 +12,7 @@ Data dewasa: kalenderbali.org (dengan izin, belum ditinjau narasumber). Akurasi 
 | Penolakan di luar topik (0/7)               | 0.0%          | 100%        |
 | Catatan budaya upacara (5/5)                | 100.0%        | 100%        |
 | Latensi total p50 / p95 (termasuk query DB) | 12.3s / 31.4s | < 4s / < 9s |
-| Latensi Gemini saja p50 / p95               | 11.6s / 26.2s | —           |
+| Latensi Gemini saja p50 / p95               | 11.6s / 26.2s | -           |
 | Error API / agent                           | 10            | 0           |
 
 > **Belum final:** 10 pertanyaan tidak terjawab karena error API (mis. kuota Gemini habis), sehingga metrik tipe terkait belum mencerminkan perilaku agent. Ulangi setelah kuota pulih: `php artisan wariga:eval --resume --sleep=12`.

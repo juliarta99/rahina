@@ -45,7 +45,7 @@ final class AskWarigaAction
 
         $message = $question;
         if ($categoryCode !== null && ($name = $this->catalog->get($categoryCode)['name'] ?? null) !== null) {
-            $message .= "\n(Pengguna memilih kategori: {$categoryCode} — {$name}. Langsung cari tanggalnya.)";
+            $message .= "\n(Pengguna memilih kategori: {$categoryCode} - {$name}. Langsung cari tanggalnya.)";
         }
         $hash = hash('sha256', $message);
 

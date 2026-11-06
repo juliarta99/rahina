@@ -1,6 +1,6 @@
-# SUPABASE.md — Database Rahina di Supabase
+# SUPABASE.md - Database Rahina di Supabase
 
-> **Arsip (2026-11-06).** Rahina pindah ke **MySQL 8** karena latensi: dari laptop pengembang di Bali, satu query ke pooler Supabase Tokyo ±360–400 ms (satu pertanyaan Tanya Wariga ±4,9 s hanya untuk database), sedangkan MySQL lokal ±2 ms per query (±0,1 s per pertanyaan). Hitung ulang dewasa 2020–2035: ±2 menit → ±18 detik. Kode tetap portabel (`ActivityMatcher` memakai `pg_trgm` bila driver pgsql). Dokumen ini disimpan bila suatu saat kembali ke Supabase.
+> **Arsip (2026-11-06).** Rahina pindah ke **MySQL 8** karena latensi: dari laptop pengembang di Bali, satu query ke pooler Supabase Tokyo ±360-400 ms (satu pertanyaan Tanya Wariga ±4,9 s hanya untuk database), sedangkan MySQL lokal ±2 ms per query (±0,1 s per pertanyaan). Hitung ulang dewasa 2020-2035: ±2 menit → ±18 detik. Kode tetap portabel (`ActivityMatcher` memakai `pg_trgm` bila driver pgsql). Dokumen ini disimpan bila suatu saat kembali ke Supabase.
 
 Rahina memakai **Supabase sebagai PostgreSQL terkelola**. Laravel tetap terhubung langsung lewat driver `pgsql` biasa. Fitur Supabase lain (Auth, Storage, Edge Functions, Realtime) **tidak dipakai** agar arsitektur tetap sederhana dan mudah dipindah ke Postgres mana pun.
 
@@ -12,7 +12,7 @@ Rahina memakai **Supabase sebagai PostgreSQL terkelola**. Laravel tetap terhubun
 
 ## 1. Setup Proyek
 
-1. Proyek aktif: aplikasi terhubung ke pooler **`aws-0-ap-northeast-1` (Tokyo)** (teramati dari koneksi Laravel, 2026-11-06; catatan sebelumnya menyebut eu-north-1). Dari laptop pengembang di Bali, satu query ±360–400 ms. Singapore (ap-southeast-1) lebih dekat dari Bali; pertimbangkan pindah sebelum deploy jika latensi query terasa (setiap query ±250 ms RTT).
+1. Proyek aktif: aplikasi terhubung ke pooler **`aws-0-ap-northeast-1` (Tokyo)** (teramati dari koneksi Laravel, 2026-11-06; catatan sebelumnya menyebut eu-north-1). Dari laptop pengembang di Bali, satu query ±360-400 ms. Singapore (ap-southeast-1) lebih dekat dari Bali; pertimbangkan pindah sebelum deploy jika latensi query terasa (setiap query ±250 ms RTT).
 2. Simpan password database di password manager, jangan di repo.
 3. Ekstensi diaktifkan lewat **migrasi Laravel** (bukan klik dashboard), supaya reproducible:
     ```php
@@ -29,7 +29,7 @@ Koneksi langsung (`db.<ref>.supabase.co`) di paket Free **hanya IPv6**. Banyak j
 
 | Kebutuhan                        | Pakai                            | Host:Port                                                                                       |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------- |
-| **Aplikasi Laravel (default)**   | **Shared pooler – Session mode** | `aws-0-ap-southeast-1.pooler.supabase.com:5432`                                                 |
+| **Aplikasi Laravel (default)**   | **Shared pooler - Session mode** | `aws-0-ap-southeast-1.pooler.supabase.com:5432`                                                 |
 | Migrasi, seeder, `wariga:import` | Session mode (sama)              | sama                                                                                            |
 | Jaringan sudah mendukung IPv6    | Direct connection (opsional)     | `db.<ref>.supabase.co:5432`                                                                     |
 | Jangan dipakai                   | Transaction mode (`:6543`)       | Shared pooler tidak mendukung prepared statements di mode ini, sedangkan Laravel/PDO memakainya |
@@ -104,7 +104,7 @@ Paket Free: database 500 MB per proyek, maksimal 2 proyek, dan **proyek di-pause
 | 500 MB DB                        | Perkiraan pemakaian < 50 MB (kalender ±5.800 baris, tanpa vektor) | Pantau `pg_database_size`; batasi log `ai_interactions` & `whatsapp_messages` (hapus > 90 hari)                                                                                                  |
 | Pause setelah 7 hari tidak aktif | Fatal saat penjurian                                              | Scheduler harian (brief 05.30, WA 06.00) sudah membuat aktivitas rutin. Tambahan: `health:ping` setiap 6 jam (`select 1`). **Cek dashboard H-3 sebelum penjurian & saat technical verification** |
 | Tanpa backup                     | Data hilang jika salah migrasi                                    | Command `db:backup` mingguan (`pg_dump` → file terenkripsi di luar Supabase). Data kalender selalu bisa dibangun ulang dari script                                                               |
-| Kuota egress                     | Kecil untuk aplikasi ini                                          | —                                                                                                                                                                                                |
+| Kuota egress                     | Kecil untuk aplikasi ini                                          | -                                                                                                                                                                                                |
 
 Upgrade ke Pro dipertimbangkan jika jumlah pengguna WhatsApp aktif bertambah atau butuh backup otomatis.
 

@@ -156,7 +156,7 @@ final class GeminiClient
         return preg_match('/per day|PerDay|billing|check your plan/i', $message) === 1;
     }
 
-    /** Lama jeda dari RetryInfo.retryDelay atau teks "retry in 7h15m34s"; 60 s – 24 jam, default 1 jam. */
+    /** Lama jeda dari RetryInfo.retryDelay atau teks "retry in 7h15m34s"; 60 s - 24 jam, default 1 jam. */
     private static function retryAfterSeconds(Response $response): int
     {
         $seconds = null;

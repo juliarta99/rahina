@@ -18,7 +18,7 @@ use InvalidArgumentException;
  * Hanya hari dengan minimal satu dewasa pendukung yang dikembalikan; urut skor tertinggi lalu tanggal.
  * Murni deterministik, tanpa AI.
  *
- * @throws InvalidArgumentException rentang tidak valid, terlalu panjang, di luar 2020–2035, atau kategori tidak dikenal.
+ * @throws InvalidArgumentException rentang tidak valid, terlalu panjang, di luar 2020-2035, atau kategori tidak dikenal.
  */
 final class DateRanker
 {
@@ -116,7 +116,7 @@ final class DateRanker
         $minYear = (int) config('rahina.calendar.min_year');
         $maxYear = (int) config('rahina.calendar.max_year');
         if ($from->year < $minYear || $to->year > $maxYear) {
-            throw new InvalidArgumentException("Kalender Rahina hanya mencakup tahun {$minYear}–{$maxYear}.");
+            throw new InvalidArgumentException("Kalender Rahina hanya mencakup tahun {$minYear}-{$maxYear}.");
         }
 
         return [$from, $to];

@@ -1,4 +1,4 @@
-# ARCHITECTURE.md — Rahina
+# ARCHITECTURE.md - Rahina
 
 ## 1. Diagram Sistem
 

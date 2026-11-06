@@ -8,7 +8,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    /* Rahina — docs/DESIGN_SYSTEM.md §11 (Palet Maskot: Terakota #8C321B & Emas #F7C04A) */
+    /* Rahina - docs/DESIGN_SYSTEM.md §11 (Palet Maskot: Terakota #8C321B & Emas #F7C04A) */
     --color-mangsi: #1c1b19;
     --color-kertas: #fffdf8;
     --color-lontar: #f6f1e7;

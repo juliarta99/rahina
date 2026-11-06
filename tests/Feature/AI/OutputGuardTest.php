@@ -88,7 +88,7 @@ it('menolak verdict yang tidak sesuai efek aturan', function (): void {
 
 it('menolak jumlah poin dan panjang teks di luar batas', function (): void {
     expect(violations(validBrief(['points' => [['verdict' => 'info', 'text' => 'Satu.', 'rule_ids' => []]]])))
-        ->toContain('2–4 poin')
+        ->toContain('2-4 poin')
         ->and(violations(validBrief(['headline' => str_repeat('a', 91)])))->toContain('headline');
 });
 

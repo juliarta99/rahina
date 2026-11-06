@@ -1,4 +1,4 @@
-# Rahina — Asisten Kalender Wariga Bali
+# Rahina - Asisten Kalender Wariga Bali
 
 Rahina mengubah informasi _ala ayuning dewasa_ kalender Bali yang panjang dan penuh istilah menjadi ringkasan harian dan jawaban yang mudah dipahami, lengkap dengan tanggal, alasan, dan sumbernya.
 
@@ -52,7 +52,7 @@ Dikirim melalui form panitia (tidak dicantumkan di repo).
 ## Known Limitations
 
 - Aturan dewasa yang tampil hanya yang sudah divalidasi; cakupan awal [x] aturan.
-- Rentang kalender 2020–2035.
+- Rentang kalender 2020-2035.
 - Perbedaan tradisi antar-daerah belum dimodelkan.
 - WhatsApp memakai gateway Fonnte (bukan API resmi Meta); nomor pengirim berisiko dibatasi. Arsitektur `MessagingGateway` siap dimigrasi ke Cloud API.
 - Rekomendasi bersifat informatif; untuk upacara besar tetap konsultasikan dengan sulinggih/pemangku.

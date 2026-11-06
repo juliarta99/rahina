@@ -1,4 +1,4 @@
-# AI_IMPLEMENTATION.md — Rahina
+# AI_IMPLEMENTATION.md - Rahina
 
 Dokumen ini menjelaskan **di mana AI dipakai, kenapa diperlukan, input-output, dan pengamannya**. Isinya juga menjadi bahan bagian _AI Implementation_ di proposal dan jawaban saat verifikasi teknis.
 
@@ -6,7 +6,7 @@ Dokumen ini menjelaskan **di mana AI dipakai, kenapa diperlukan, input-output, d
 
 | #   | Fitur              | Teknik AI                                                                      | Input → Output                                                     | Kenapa perlu AI                                                       |
 | --- | ------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------ | --------------------------------------------------------------------- |
-| A   | Rahina Ini         | LLM summarization (structured output)                                          | data dewasa hari itu (semua domain) → 3–4 poin JSON                | Data mentah 10–20 istilah, saling bertentangan, berbahasa teknis      |
+| A   | Rahina Ini         | LLM summarization (structured output)                                          | data dewasa hari itu (semua domain) → 3-4 poin JSON                | Data mentah 10-20 istilah, saling bertentangan, berbahasa teknis      |
 | B   | Pemetaan aktivitas | Pencarian trigram (PHP; pg_trgm bila Postgres) + klasifikasi LLM (output enum) | "nanam singkong" → `pertanian.umbi`                                | Kategori wariga spesifik; user memakai bahasa sehari-hari             |
 | C   | Tanya Wariga       | LLM agent + function calling                                                   | pertanyaan bebas → tanggal + alasan + sumber                       | Pertanyaan alami harus diubah menjadi kueri terstruktur multi-langkah |
 | D   | Penjelas konflik   | LLM + retrieval full-text (`knowledge_notes`)                                  | daftar dewasa pendukung/penghalang + aturan prioritas → penjelasan | Butuh penalaran dan bahasa awam; aturan prioritas dari buku           |
@@ -17,16 +17,16 @@ Dokumen ini menjelaskan **di mana AI dipakai, kenapa diperlukan, input-output, d
 
 - **Satu model untuk semua fitur: `gemini-3.1-flash-lite`** (dari `GEMINI_MODEL`). `temperature` 0.2, `responseMimeType: application/json` + schema.
 - Model ini mendukung function calling dan structured output JSON, cocok untuk tugas klasifikasi, ekstraksi, dan agent ringan.
-- **Tanpa model embedding.** Pencarian alias aktivitas & catatan pengetahuan memakai `pg_trgm` + full-text search Postgres. Korpusnya kecil (ratusan–ribuan baris), sehingga pencarian leksikal cukup, dan kekurangannya ditutup oleh klasifikasi LLM.
+- **Tanpa model embedding.** Pencarian alias aktivitas & catatan pengetahuan memakai `pg_trgm` + full-text search Postgres. Korpusnya kecil (ratusan-ribuan baris), sehingga pencarian leksikal cukup, dan kekurangannya ditutup oleh klasifikasi LLM.
 - Alasan memilih: latensi rendah, biaya rendah, satu API key, function calling native.
 - Karena model "lite", tugas dibuat **sempit dan terstruktur**: prompt pendek, schema ketat, maksimal 4 langkah agent, dan semua perhitungan tetap di kode.
 
-## 3. Fitur A — Rahina Ini
+## 3. Fitur A - Rahina Ini
 
 **Alur**
 
 ```
-Scheduler 00:05 WITA → BuildDailyBriefAction(date) — satu ringkasan umum
+Scheduler 00:05 WITA → BuildDailyBriefAction(date) - satu ringkasan umum
   → CalendarRepository::day(date)       (wuku, wewaran, sasih, rahinan, dewasa + effects)
   → semua dewasa yang boleh tampil beserta efek per domain (persona dihapus 2026-11-06)
   → prompt daily_brief.v1 + data JSON
@@ -51,19 +51,19 @@ Scheduler 00:05 WITA → BuildDailyBriefAction(date) — satu ringkasan umum
 
 **Guard**
 
-- `points` 2–4 item; setiap `rule_ids` ⊆ id dewasa yang dikirim; `verdict` konsisten dengan `effect` aturan yang dirujuk.
+- `points` 2-4 item; setiap `rule_ids` ⊆ id dewasa yang dikirim; `verdict` konsisten dengan `effect` aturan yang dirujuk.
 - Gagal validasi → retry 1× → fallback **template non-AI** ("Hari ini terdapat 3 dewasa baik untuk pertanian: …").
 
-## 4. Fitur B — Pemetaan Aktivitas
+## 4. Fitur B - Pemetaan Aktivitas
 
 1. Normalisasi (lowercase, hapus kata umum "hari baik", "untuk", "kapan").
 2. Pencarian trigram `activity_aliases` (lihat `DATABASE_SCHEMA.md` §5).
 3. Skor tertinggi ≥ 0.60 dan selisih dengan peringkat 2 ≥ 0.10 → langsung dipakai.
 4. Selain itu → **LLM klasifikasi**: kirim teks + daftar `code` + nama kategori (enum di schema). Output `{code, confidence}`.
-5. `confidence` < 0.7 atau kategori upacara besar yang ambigu → **tanya balik** dengan 2–3 pilihan kategori.
+5. `confidence` < 0.7 atau kategori upacara besar yang ambigu → **tanya balik** dengan 2-3 pilihan kategori.
 6. Frasa baru yang dikonfirmasi user disimpan sebagai kandidat alias (perlu disetujui admin).
 
-## 5. Fitur C — Tanya Wariga (agent)
+## 5. Fitur C - Tanya Wariga (agent)
 
 ### 5.1 Tools (function declarations)
 
@@ -75,7 +75,7 @@ Scheduler 00:05 WITA → BuildDailyBriefAction(date) — satu ringkasan umum
 | `explain_dewasa`  | `code: string`                                                            | `{name, summary, effects, source}`                                    |
 | `explain_concept` | `topic: string`                                                           | potongan `knowledge_notes` + sumber                                   |
 
-Rentang tanggal maksimum 92 hari dan hanya dalam 2020–2035. Di luar itu tool mengembalikan error yang dijelaskan agent.
+Rentang tanggal maksimum 92 hari dan hanya dalam 2020-2035. Di luar itu tool mengembalikan error yang dijelaskan agent.
 
 ### 5.2 Loop
 
@@ -126,7 +126,7 @@ Catatan:
 - `thinkingConfig.thinkingLevel = minimal` (`RAHINA_AGENT_THINKING`): diukur 2026-11-06, ±1,7 s per langkah vs ±10,7 s default, dengan tool call yang sama.
 - Panggilan tool identik dalam satu sesi tidak dijalankan ulang.
 - Klarifikasi kategori **ditegakkan di kode**: bila `ActivityMatcher` ragu (skor < 0,60 atau selisih dengan pesaing dari keluarga lain < 0,10) dan pengguna belum memilih kategori, `find_good_days` menolak dengan error dan `OutputGuard` memaksa `needs_clarification`. Bila model melewati `map_activity`, `find_good_days` mencocokkan sendiri pertanyaan pengguna. Induk & anak kategori yang seri (mis. `pertanian` vs `pertanian.padi`) dianggap yakin, dan yang lebih spesifik dipilih.
-- Kuota Free Tier `gemini-3.1-flash-lite`: **500 request/hari** (teramati 2026-11-06). Satu pertanyaan Tanya Wariga ≈ 2–4 request, sehingga ±150 pertanyaan/hari dikurangi ringkasan harian. Untuk demo & penjurian disarankan mengaktifkan billing (Paid Tier).
+- Kuota Free Tier `gemini-3.1-flash-lite`: **500 request/hari** (teramati 2026-11-06). Satu pertanyaan Tanya Wariga ≈ 2-4 request, sehingga ±150 pertanyaan/hari dikurangi ringkasan harian. Untuk demo & penjurian disarankan mengaktifkan billing (Paid Tier).
 - Data tampilan kartu tanggal (wewaran, wuku, dewasa pendukung/penghalang, verdict) diambil dari hasil tool di server, bukan dari teks model; `rule_ids` dari model hanya dipakai sebagai petunjuk.
 
 ### 5.4 Aturan system prompt (ringkas)
@@ -147,7 +147,7 @@ Catatan:
 
 Kode guard harus mudah ditunjukkan ke juri: `app/AI/OutputGuard.php`.
 
-## 7. Fitur D — Penjelas Konflik
+## 7. Fitur D - Penjelas Konflik
 
 Input: tanggal + kategori → `support[]`, `block[]`, `dewasa_precedence`, `knowledge_notes` relevan (top-3 via full-text / topik).
 Output: `{ "conclusion": "ayu|ala|campur", "explanation": "≤ 3 kalimat", "precedence_source_id": 4 }`.

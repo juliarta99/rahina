@@ -1,10 +1,10 @@
-# DATABASE_SCHEMA.md — Rahina
+# DATABASE_SCHEMA.md - Rahina
 
 ## 0. Database
 
 **MySQL 8** (sejak 2026-11-06; sebelumnya Supabase/PostgreSQL, ditinggalkan karena latensi, lihat `SUPABASE.md` arsip). Test memakai SQLite in-memory. Kode portabel ke tiga driver: bagian khusus Postgres (`pg_trgm`, index parsial/GIN, CHECK constraint, RLS) dibungkus `DB::getDriverName() === 'pgsql'`; di MySQL/SQLite pemetaan aktivitas memakai trigram di PHP (`ActivityMatcher`). Kolom `jsonb` di migrasi menjadi `json` di MySQL. Tidak memakai vektor/embedding.
 
-Setup lokal (Laragon): `CREATE DATABASE rahina CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;` lalu `php artisan migrate --seed`, `wariga:import storage/app/calendar`, `wariga:compute-dewasa` (±18 detik untuk 2020–2035).
+Setup lokal (Laragon): `CREATE DATABASE rahina CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;` lalu `php artisan migrate --seed`, `wariga:import storage/app/calendar`, `wariga:compute-dewasa` (±18 detik untuk 2020-2035).
 Zona waktu aplikasi `Asia/Makassar`; tanggal kalender disimpan sebagai `date` (tanggal sipil Masehi).
 
 ## 1. Gambaran Kelompok Tabel
@@ -50,7 +50,7 @@ erDiagram
 
 | Kolom       | Tipe               | Keterangan                 |
 | ----------- | ------------------ | -------------------------- |
-| id          | smallint PK        | 1–30 sesuai urutan         |
+| id          | smallint PK        | 1-30 sesuai urutan         |
 | name        | varchar(32) unique |                            |
 | urip        | smallint           |                            |
 | description | text null          | ringkasan sendiri + sumber |
@@ -71,9 +71,9 @@ erDiagram
 
 | Kolom          | Tipe               | Keterangan                                                      |
 | -------------- | ------------------ | --------------------------------------------------------------- |
-| id             | smallint PK        | 1–12 sasih biasa, 13–20 mala/nampih                             |
+| id             | smallint PK        | 1-12 sasih biasa, 13-20 mala/nampih                             |
 | name           | varchar(32) unique |                                                                 |
-| base_id        | smallint           | sasih dasar (1–12); untuk nampih menunjuk sasih yang digandakan |
+| base_id        | smallint           | sasih dasar (1-12); untuk nampih menunjuk sasih yang digandakan |
 | is_intercalary | boolean            | true untuk mala/nampih                                          |
 | alt_name       | varchar(32) null   |                                                                 |
 
@@ -92,7 +92,7 @@ Data master di-seed dari `database/data/wariga_master.json` (dihasilkan `node sc
 
 ### 3.2 Kalender hasil hitung
 
-**`calendar_days`** (±5.800 baris untuk 2020–2035)
+**`calendar_days`** (±5.800 baris untuk 2020-2035)
 
 | Kolom                    | Tipe                           | Keterangan                                                            |
 | ------------------------ | ------------------------------ | --------------------------------------------------------------------- |
@@ -102,7 +102,7 @@ Data master di-seed dari `database/data/wariga_master.json` (dihasilkan `node sc
 | ekawara_id … dasawara_id | smallint FK → `wewaran_values` | 10 kolom, nullable untuk ekawara                                      |
 | urip_total               | smallint                       | saptawara + pancawara                                                 |
 | sasih_id                 | smallint FK                    |                                                                       |
-| sasih_day                | smallint                       | 1–15                                                                  |
+| sasih_day                | smallint                       | 1-15                                                                  |
 | sasih_day_end            | smallint null                  | hanya saat ngunaratri (dua hari sasih dalam satu hari), contoh 15 → 1 |
 | is_penanggal             | boolean                        | false = panglong                                                      |
 | is_purnama               | boolean                        |                                                                       |
@@ -125,9 +125,9 @@ Index: `(wuku_id)`, `(sasih_id, sasih_day)`, `(date) WHERE is_purnama`, `(date) 
 | id            | bigint PK                  |                                                  |
 | code          | varchar(64) unique         | slug, misal `sampi_gumarang_turun`               |
 | name          | varchar(96)                |                                                  |
-| summary       | text                       | **ditulis ulang sendiri**, 1–2 kalimat           |
+| summary       | text                       | **ditulis ulang sendiri**, 1-2 kalimat           |
 | verdict       | enum(`ayu`,`ala`,`campur`) | sifat umum                                       |
-| alahing_level | smallint null              | 1–5 (bobot / tingkat prioritas)                  |
+| alahing_level | smallint null              | 1-5 (bobot / tingkat prioritas)                  |
 | conditions    | jsonb                      | lihat §4                                         |
 | source_id     | FK                         | wajib                                            |
 | source_page   | varchar(32) null           |                                                  |
@@ -358,7 +358,7 @@ Operator: `in`, `not_in`, `eq`, `between`, `gte`, `lte`.
         {
             "code": "slug_aturan",
             "name": "[[DEWASA:NAMA]]",
-            "summary": "Ringkasan 1–2 kalimat dengan kata sendiri.",
+            "summary": "Ringkasan 1-2 kalimat dengan kata sendiri.",
             "verdict": "ayu | ala | campur",
             "alahing_level": 1,
             "conditions": {
@@ -392,7 +392,7 @@ Operator: `in`, `not_in`, `eq`, `between`, `gte`, `lte`.
 - Aturan **tanpa** `validated_at` tetap dihitung, tetapi **tidak tampil** di produksi (`CalendarRepository::dewasa()` default hanya yang tervalidasi).
 - Satu aturan tidak valid → seluruh file ditolak. Aturan yang dihapus dari file → `is_active = false` (riwayat tetap ada).
 
-Alur: edit JSON → `php artisan wariga:load-rules` → `php artisan wariga:compute-dewasa` (±1 menit untuk 2020–2035 ke Supabase).
+Alur: edit JSON → `php artisan wariga:load-rules` → `php artisan wariga:compute-dewasa` (±1 menit untuk 2020-2035 ke Supabase).
 
 ## 5. Query Penting
 

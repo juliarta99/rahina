@@ -23,7 +23,7 @@ class DayDetailController extends Controller
 
         $day = $calendar->day($date);
         if ($day === null) {
-            return response()->json(['message' => 'Tanggal ini belum tersedia di kalender Rahina (2020–2035).'], 404);
+            return response()->json(['message' => 'Tanggal ini belum tersedia di kalender Rahina (2020-2035).'], 404);
         }
 
         // Batas panggilan AI per pengguna (AI_IMPLEMENTATION.md §8). Bila lewat batas: cache atau template.

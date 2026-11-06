@@ -22,7 +22,7 @@ return [
     'agent' => [
         'max_steps' => (int) env('RAHINA_AGENT_MAX_STEPS', 4),
         'max_range_days' => 92,
-        // Gemini 3 "thinking level". minimal ≈ 1–2 s per langkah vs ±10 s default (diukur 2026-11-06);
+        // Gemini 3 "thinking level". minimal ≈ 1-2 s per langkah vs ±10 s default (diukur 2026-11-06);
         // tugas agent sempit & terstruktur, perhitungan tetap di kode.
         'thinking_level' => env('RAHINA_AGENT_THINKING', 'minimal'),
     ],

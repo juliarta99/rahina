@@ -181,7 +181,7 @@ export default function Profil({
                         <b>{auth.user?.name}</b>
                         <br />
                         <span className="text-abu-600">
-                            Nomor HP Masuk: {accountPhone ?? '—'}
+                            Nomor HP Masuk: {accountPhone ?? '-'}
                         </span>
                     </p>
                     <div className="flex flex-wrap gap-3">
@@ -440,7 +440,7 @@ function Pending({
                 <span className="text-xs text-abu-600">Nomor WhatsApp yang didaftarkan:</span>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-mono text-base font-semibold">
-                        {currentDisplay ?? '—'}
+                        {currentDisplay ?? '-'}
                     </span>
                     {!isEditingPhone && (
                         <button
@@ -617,7 +617,7 @@ function Active({
                 <dt className="text-abu-600">Nomor WhatsApp</dt>
                 <dd className="flex flex-wrap items-center gap-3">
                     <span className="font-mono font-semibold">
-                        {subscription.display_phone ?? subscription.phone ?? '—'}
+                        {subscription.display_phone ?? subscription.phone ?? '-'}
                     </span>
                     {!isEditingPhone && (
                         <button

@@ -1,4 +1,4 @@
-# WHATSAPP.md — Rahina Pagi via WhatsApp (Fonnte)
+# WHATSAPP.md - Rahina Pagi via WhatsApp (Fonnte)
 
 Fitur: pengguna yang mendaftarkan nomor WhatsApp menerima **ringkasan harian pukul 06.00 WITA** (bagian umum + bagian pribadi berdasarkan otonan), dan bisa **membalas pesan untuk bertanya** ke Tanya Wariga.
 
@@ -95,7 +95,7 @@ Web (Profil, wajib masuk akun): (opsional) tanggal lahir, centang persetujuan:
               umum   = daily_briefs[umum]
               pribadi = PersonalNoteBuilder (tanpa LLM)
             → dispatch SendMorningBrief dengan jeda bertahap mulai 06:00
-06:00–06:30 kirim berurutan, jeda acak 4–12 detik antar pesan
+06:00-06:30 kirim berurutan, jeda acak 4-12 detik antar pesan
 ```
 
 Kapasitas kasar: 30 menit ÷ ±8 detik ≈ 225 pesan per nomor. Lebih dari itu → perpanjang jendela atau tambah device.
@@ -132,11 +132,11 @@ Balas pesan ini untuk bertanya hari baik. Ketik BERHENTI untuk berhenti.
 ```
 
 - Tanpa emoji. Isi poin diambil dari data tervalidasi; teks di atas hanya format.
-- Variasikan baris pembuka/penutup dari 3–4 versi agar pesan tidak identik 100% setiap hari.
+- Variasikan baris pembuka/penutup dari 3-4 versi agar pesan tidak identik 100% setiap hari.
 
 ### Bagian pribadi (`PersonalNoteBuilder`, tanpa LLM)
 
-Ambil 1–2 yang berlaku: (1) hari ini otonan, (2) otonan ≤ 14 hari lagi, (3) rahinan besar ≤ 7 hari lagi (persona dihapus 2026-11-06). Tidak ada yang berlaku → bagian ini dihilangkan.
+Ambil 1-2 yang berlaku: (1) hari ini otonan, (2) otonan ≤ 14 hari lagi, (3) rahinan besar ≤ 7 hari lagi (persona dihapus 2026-11-06). Tidak ada yang berlaku → bagian ini dihilangkan.
 Tidak memuat ramalan watak/nasib kecuali aturannya bersumber dan tervalidasi.
 
 ---
@@ -238,7 +238,7 @@ Sudah dibangun & diuji (`tests/Feature/WhatsApp/WhatsAppTest.php`, driver `fake`
 | Opt-in web        | `/profil` (wajib masuk akun) → `RahinaProfileController`: persetujuan, tanggal lahir opsional + persetujuan terpisah, kode DAFTAR 15 menit, jeda/lanjut, hapus data |
 | Webhook           | `POST /webhooks/fonnte/{secret}` → `Webhooks/FonnteWebhookController` (secret turunan APP_KEY, cek device, idempoten, 200 OK, queue)                                |
 | Router kata kunci | `app/Messaging/InboundRouter.php`: DAFTAR, BERHENTI/STOP, MULAI, BANTUAN, PROFIL, HAPUS DATA, selain itu → Tanya Wariga                                             |
-| Pesan pagi        | `wa:prepare-morning` (05:45, `routes/console.php`) → `Jobs/SendMorningBrief` bertahap mulai 06:00, jeda acak 4–12 s, idempoten per tanggal, retry 1/5/15 menit      |
+| Pesan pagi        | `wa:prepare-morning` (05:45, `routes/console.php`) → `Jobs/SendMorningBrief` bertahap mulai 06:00, jeda acak 4-12 s, idempoten per tanggal, retry 1/5/15 menit      |
 | Catatan pribadi   | `PersonalNoteBuilder` + `App\Wariga\Otonan` (siklus 210 hari, tanpa LLM)                                                                                            |
 | Perintah          | `php artisan wa:device` (status device), `php artisan wa:device --webhook` (URL webhook)                                                                            |
 

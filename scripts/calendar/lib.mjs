@@ -16,7 +16,7 @@ const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
 
 export const ENGINE = `${pkg.name}@${pkg.version}`;
 
-/** Urutan siklus wewaran (cycle 1–10) beserta properti BalineseDate dan daftar nilainya. */
+/** Urutan siklus wewaran (cycle 1-10) beserta properti BalineseDate dan daftar nilainya. */
 export const WEWARAN = [
     { cycle: 1, key: 'ekawara', prop: 'ekaWara', values: B.EKA_WARA_VALUES },
     { cycle: 2, key: 'dwiwara', prop: 'dwiWara', values: B.DWI_WARA_VALUES },
@@ -70,7 +70,7 @@ export const PARINGKELAN = [
 
 const pad = (n) => String(n).padStart(2, '0');
 
-/** @param {number} y @param {number} m 1–12 @param {number} d */
+/** @param {number} y @param {number} m 1-12 @param {number} d */
 export function toRecord(y, m, d) {
     const bd = new B.BalineseDate(new Date(y, m - 1, d));
     const record = {

@@ -281,7 +281,7 @@ it('meneruskan kategori pilihan klarifikasi ke model', function (): void {
 
     ask('Kapan hari baik?', 'pertanian.padi');
 
-    Http::assertSent(fn (Request $r): bool => str_contains($r['contents'][0]['parts'][0]['text'], 'pertanian.padi — Menanam padi'));
+    Http::assertSent(fn (Request $r): bool => str_contains($r['contents'][0]['parts'][0]['text'], 'pertanian.padi - Menanam padi'));
 });
 
 it('selalu menampilkan catatan budaya untuk kategori upacara besar', function (): void {

@@ -1,4 +1,4 @@
-# DESIGN_SYSTEM.md — Rahina
+# DESIGN_SYSTEM.md - Rahina
 
 Sumber kebenaran untuk seluruh UI. Setiap komponen baru harus memakai token di sini.
 
@@ -82,7 +82,7 @@ Sumber kebenaran untuk seluruh UI. Setiap komponen baru harus memakai token di s
 | Baik          | `ayu` / `ayu-100`       | `CheckCircle` | "Baik untuk…"      |
 | Tidak baik    | `ala` / `ala-100`       | `XCircle`     | "Hindari…"         |
 | Campuran      | `campur` / `kunyit-100` | `Scales`      | "Ada pertimbangan" |
-| Netral / info | `nila` / `nila-100`     | `Info`        | —                  |
+| Netral / info | `nila` / `nila-100`     | `Info`        | -                  |
 
 ---
 
@@ -188,7 +188,7 @@ Tinggi 44px (mobile 48px), radius `md`, focus ring `3px nila-100` + outline `2px
 ### 6.3 TodayBrief (kartu "Rahina Ini")
 
 - Atas: `date-xl` + nama hari Bali lengkap (`meta`) + wuku + sasih.
-- Isi: 3–4 poin `body-lg`, masing-masing diawali **VerdictTag**.
+- Isi: 3-4 poin `body-lg`, masing-masing diawali **VerdictTag**.
 - Bawah: baris sumber `meta`: ikon `BookOpen` + "Disusun dari perhitungan wariga · 3 sumber". Tap → sheet daftar dewasa mentah + sumber.
 - Pemilih profil (chip): Umum · Petani · Pedagang · Pemangku.
 
@@ -213,7 +213,7 @@ Chip radius `sm`, tinggi 24, ikon 16 + label. Contoh: `[CheckCircle] Baik`, `[XC
 │ Sel, 15 Des 2026            [VerdictTag Baik]│
 │ Anggara Kliwon · Wuku [x] · Sasih [x]        │
 │ Mendukung: [Dewasa A], [Dewasa B]            │
-│ Penghalang: —                                │
+│ Penghalang: -                                │
 │ [Lihat detail hari →]   [Tambah ke kalender] │
 └──────────────────────────────────────────────┘
 ```
@@ -244,14 +244,14 @@ Ikon 32px `abu-600` + satu kalimat + satu aksi. Contoh error AI: ikon `CloudSlas
 
 ## 7. Layout
 
-- Mobile-first 360–430px; konten maks 640px; desktop ≥1024: nav kiri 232px + konten + panel kanan 320px (detail hari terpilih).
+- Mobile-first 360-430px; konten maks 640px; desktop ≥1024: nav kiri 232px + konten + panel kanan 320px (detail hari terpilih).
 - Bottom nav mobile (ikon + label): **Hari Ini** (`Sun`) · **Kalender** (`CalendarBlank`) · **Tanya** (`ChatCircleText`) · **Rencana** (`ListChecks`) · **Profil** (`User`).
 
 ---
 
 ## 8. Motion
 
-- Durasi 120–200ms, easing `cubic-bezier(.2,.7,.2,1)`.
+- Durasi 120-200ms, easing `cubic-bezier(.2,.7,.2,1)`.
 - Pindah bulan: geser horizontal 160ms. Sheet: slide-up 180ms.
 - Tanpa animasi dekoratif loop. `prefers-reduced-motion` → fade saja.
 

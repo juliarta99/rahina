@@ -69,7 +69,7 @@ final readonly class CalendarDayRecord
                 continue;
             }
             if (! is_int($value) || $value < 1 || $value > $cycle) {
-                throw new InvalidArgumentException("{$key} di luar rentang 1–{$cycle} pada {$date}");
+                throw new InvalidArgumentException("{$key} di luar rentang 1-{$cycle} pada {$date}");
             }
             $positions[$key] = $value;
         }
@@ -81,7 +81,7 @@ final readonly class CalendarDayRecord
         /** @var list<int> $rahinan */
         $wuku = self::int($data, 'wuku');
         if ($wuku < 1 || $wuku > 30) {
-            throw new InvalidArgumentException("wuku di luar rentang 1–30 pada {$date}");
+            throw new InvalidArgumentException("wuku di luar rentang 1-30 pada {$date}");
         }
 
         $ingkel = $data['ingkel'] ?? null;

@@ -41,9 +41,9 @@ export function TodayPanel({
                   ],
               ]
             : []),
-        [id.wewaran.saptawara, day.wewaran.saptawara?.name ?? '—'],
-        [id.wewaran.pancawara, day.wewaran.pancawara?.name ?? '—'],
-        [id.wewaran.dasawara, day.wewaran.dasawara?.name ?? '—'],
+        [id.wewaran.saptawara, day.wewaran.saptawara?.name ?? '-'],
+        [id.wewaran.pancawara, day.wewaran.pancawara?.name ?? '-'],
+        [id.wewaran.dasawara, day.wewaran.dasawara?.name ?? '-'],
         [t.wuku, day.wuku.name],
         [t.sasih, day.sasih.name],
         [

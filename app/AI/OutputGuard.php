@@ -77,13 +77,13 @@ final class OutputGuard
 
         $headline = is_string($output['headline'] ?? null) ? self::clean($output['headline']) : '';
         if ($headline === '' || mb_strlen($headline) > 90) {
-            $errors[] = 'headline wajib 1–90 karakter';
+            $errors[] = 'headline wajib 1-90 karakter';
         }
 
         $rawPoints = $output['points'] ?? null;
         $points = [];
         if (! is_array($rawPoints) || ! array_is_list($rawPoints) || count($rawPoints) < 2 || count($rawPoints) > 4) {
-            $errors[] = 'points wajib berisi 2–4 poin';
+            $errors[] = 'points wajib berisi 2-4 poin';
             $rawPoints = is_array($rawPoints) ? array_values($rawPoints) : [];
         }
 
@@ -105,7 +105,7 @@ final class OutputGuard
                 continue;
             }
             if ($text === '' || mb_strlen($text) > 140) {
-                $errors[] = "poin {$n}: text wajib 1–140 karakter";
+                $errors[] = "poin {$n}: text wajib 1-140 karakter";
             }
             if (! is_array($ids) || array_filter($ids, fn (mixed $id): bool => ! is_int($id)) !== []) {
                 $errors[] = "poin {$n}: rule_ids harus daftar angka";

@@ -26,7 +26,7 @@ it('menolak rentang di luar batas', function (string $start, string $end, string
         ->toThrow(InvalidArgumentException::class, $message);
 })->with([
     ['2025-01-01', '2025-12-31', 'Rentang maksimal'],
-    ['2019-12-01', '2019-12-31', '2020–2035'],
+    ['2019-12-01', '2019-12-31', '2020-2035'],
     ['2025-05-01', '2025-04-01', 'lebih awal'],
     ['2025-02-30', '2025-03-01', 'Format tanggal'],
 ]);

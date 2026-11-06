@@ -7,7 +7,7 @@ Maks 5 halaman isi (di luar cover & lampiran). Bagian bertanda **[TODO]** wajib 
 
 ## Cover
 
-- **Nama Produk:** Rahina — Asisten Kalender Wariga Bali
+- **Nama Produk:** Rahina - Asisten Kalender Wariga Bali
 - **Nama Tim:** [TODO]
 - **Ketua / Anggota:** [TODO]
 - **Instansi:** Universitas Udayana
@@ -22,12 +22,12 @@ Kalender Bali (wariga) masih menjadi pedoman sehari-hari masyarakat Hindu Bali u
 
 Masalahnya, informasi harian tersebut:
 
-1. **Berupa daftar 10–20 istilah teknis** (nama dewasa) yang tidak dipahami sebagian besar generasi muda.
+1. **Berupa daftar 10-20 istilah teknis** (nama dewasa) yang tidak dipahami sebagian besar generasi muda.
 2. **Sering tampak bertentangan.** Pada satu hari yang sama bisa muncul dewasa yang "baik untuk menanam padi" sekaligus dewasa yang "tidak baik bercocok tanam". Tanpa pemahaman wariga, pengguna tidak tahu harus mengikuti yang mana.
 3. **Sulit dicari untuk kebutuhan spesifik.** Untuk menjawab "kapan hari baik menanam cabai bulan depan?", pengguna harus membuka kalender hari per hari dan menafsirkan sendiri.
 4. Pengetahuan wariga terkonsentrasi pada pemangku dan tetua, sehingga ada **risiko putus pewarisan pengetahuan**.
 
-**[TODO] Bukti pendukung:** survei singkat 30–50 responden (pemahaman istilah dewasa, cara mencari hari baik, kebutuhan), + kutipan wawancara 2–3 petani/pemangku.
+**[TODO] Bukti pendukung:** survei singkat 30-50 responden (pemahaman istilah dewasa, cara mencari hari baik, kebutuhan), + kutipan wawancara 2-3 petani/pemangku.
 
 ## 2. Target User
 
@@ -44,9 +44,9 @@ Masalahnya, informasi harian tersebut:
 
 **User journey utama**
 
-1. Buka Rahina → halaman **Rahina Ini**: tanggal Bali + 3–4 poin ringkas sesuai persona (misalnya _Petani_).
+1. Buka Rahina → halaman **Rahina Ini**: tanggal Bali + 3-4 poin ringkas sesuai persona (misalnya _Petani_).
 2. Tap "lihat sumber" → daftar dewasa lengkap beserta rujukan buku.
-3. Buka **Tanya Wariga** → ketik "hari baik menanam cabai bulan Desember" → muncul 3–5 tanggal terbaik, masing-masing dengan wuku/wewaran, dewasa pendukung & penghalang, dan tautan ke detail hari.
+3. Buka **Tanya Wariga** → ketik "hari baik menanam cabai bulan Desember" → muncul 3-5 tanggal terbaik, masing-masing dengan wuku/wewaran, dewasa pendukung & penghalang, dan tautan ke detail hari.
 4. Simpan tanggal ke rencana / ekspor ke Google Calendar.
 5. **Tanpa membuka aplikasi:** pengguna yang mendaftarkan WhatsApp menerima ringkasan setiap pukul 06.00 WITA (umum + catatan pribadi seperti hitung mundur otonan), dan cukup membalas pesan untuk bertanya hari baik.
 
@@ -54,7 +54,7 @@ Masalahnya, informasi harian tersebut:
 
 | Bagian             | Model / metode                                                                           | Input → Output                                              | Alasan AI diperlukan                                                        |
 | ------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Ringkasan harian   | `gemini-3.1-flash-lite`, structured output                                               | data dewasa hari itu + persona → 3–4 poin JSON              | Mengubah daftar istilah yang bertentangan menjadi bahasa awam per kebutuhan |
+| Ringkasan harian   | `gemini-3.1-flash-lite`, structured output                                               | data dewasa hari itu + persona → 3-4 poin JSON              | Mengubah daftar istilah yang bertentangan menjadi bahasa awam per kebutuhan |
 | Pemetaan aktivitas | Pencarian trigram/full-text Postgres + klasifikasi `gemini-3.1-flash-lite` (output enum) | "nanam singkong" → kategori `pertanian.umbi`                | Kategori wariga sangat spesifik; pengguna memakai bahasa sehari-hari        |
 | Tanya Wariga       | `gemini-3.1-flash-lite` agent dengan **function calling** (5 tools)                      | pertanyaan bebas → daftar tanggal + alasan + sumber         | Pertanyaan alami perlu diubah menjadi kueri terstruktur multi-langkah       |
 | Penjelas konflik   | `gemini-3.1-flash-lite` + retrieval catatan pengetahuan (full-text)                      | dewasa pendukung/penghalang + aturan prioritas → penjelasan | Butuh penalaran dan penjelasan berbasis sumber                              |
@@ -73,7 +73,7 @@ Masalahnya, informasi harian tersebut:
 
 **Core (berfungsi saat submission)**
 
-- [ ] Kalender wariga 2020–2035 (wuku, wewaran, sasih, purnama/tilem, rahinan)
+- [ ] Kalender wariga 2020-2035 (wuku, wewaran, sasih, purnama/tilem, rahinan)
 - [ ] Rule engine dewasa ([x] aturan tervalidasi, 6 domain aktivitas)
 - [ ] Rahina Ini (4 persona)
 - [ ] Tanya Wariga (agent + referensi tanggal)

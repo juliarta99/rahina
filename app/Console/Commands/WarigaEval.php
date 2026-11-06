@@ -184,7 +184,7 @@ class WarigaEval extends Command
      */
     private function report(array $results, string $today): string
     {
-        $pct = fn (int $a, int $b): string => $b === 0 ? '–' : number_format(100 * $a / $b, 1).'%';
+        $pct = fn (int $a, int $b): string => $b === 0 ? '-' : number_format(100 * $a / $b, 1).'%';
         $of = fn (string $type): array => array_values(array_filter($results, fn (array $r): bool => $r['type'] === $type));
 
         $datesTotal = array_sum(array_column($results, 'dates_total'));
@@ -206,7 +206,7 @@ class WarigaEval extends Command
         $errors = count(array_filter($results, fn (array $r): bool => $r['error'] !== null));
 
         $lines = [
-            '# EVAL_RESULTS.md — Tanya Wariga',
+            '# EVAL_RESULTS.md - Tanya Wariga',
             '',
             '_Dihasilkan `php artisan wariga:eval` pada '.now()->toDateTimeString().' WITA · model `'.config('rahina.gemini.model').'` · prompt `agent_system.v'.AgentRunner::PROMPT_VERSION.'` · "hari ini" agent = '.$today.'._',
             '',
@@ -220,7 +220,7 @@ class WarigaEval extends Command
             '| Penolakan di luar topik ('.$offOk.'/'.count($off).') | '.$pct($offOk, count($off)).' | 100% |',
             '| Catatan budaya upacara ('.$noticeOk.'/'.count($notice).') | '.$pct($noticeOk, count($notice)).' | 100% |',
             '| Latensi total p50 / p95 (termasuk query DB) | '.number_format($p(0.5) / 1000, 1).'s / '.number_format($p(0.95) / 1000, 1).'s | < 4s / < 9s |',
-            '| Latensi Gemini saja p50 / p95 | '.number_format($pg(0.5) / 1000, 1).'s / '.number_format($pg(0.95) / 1000, 1).'s | — |',
+            '| Latensi Gemini saja p50 / p95 | '.number_format($pg(0.5) / 1000, 1).'s / '.number_format($pg(0.95) / 1000, 1).'s | - |',
             "| Error API / agent | {$errors} | 0 |",
             '',
             ...($errors > 0 ? [

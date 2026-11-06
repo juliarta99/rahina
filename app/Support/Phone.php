@@ -23,7 +23,7 @@ final class Phone
         return $digits;
     }
 
-    /** Nomor seluler Indonesia: 62 8xx, total 10–13 digit setelah 62. */
+    /** Nomor seluler Indonesia: 62 8xx, total 10-13 digit setelah 62. */
     public static function isValid(string $normalized): bool
     {
         return preg_match('/^628\d{8,11}$/', $normalized) === 1;

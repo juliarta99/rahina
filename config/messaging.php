@@ -21,7 +21,7 @@ return [
     // Nomor device untuk driver fake (tautan wa.me di lokal). Fonnte membaca dari /device.
     'fake_device' => '620000000000',
 
-    'send_time' => '06:00',            // WITA
+    'send_time' => env('WA_SEND_TIME', '06:00'),            // WITA
     'send_window_minutes' => 30,
     'delay_seconds' => [4, 12],        // jeda acak antar pesan
     'device_cache_minutes' => 60,

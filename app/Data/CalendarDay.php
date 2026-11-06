@@ -14,7 +14,7 @@ final readonly class CalendarDay
      * @param  array<string, ?WarigaValue>  $wewaran  kunci: ekawara … dasawara
      * @param  list<array{id: int, slug: string, name: string, kind: string}>  $rahinan
      * @param  array<string, ?string>  $paringkelan  jejepan, lintang, panca_suda, … (nama saja)
-     * @param  int  $sasihNumber  urutan sasih dasar 1–12 (nampih/mala memakai urutan sasih dasarnya)
+     * @param  int  $sasihNumber  urutan sasih dasar 1-12 (nampih/mala memakai urutan sasih dasarnya)
      */
     public function __construct(
         public string $date,

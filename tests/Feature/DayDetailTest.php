@@ -60,7 +60,7 @@ it('tidak memanggil AI bila batas laju tercapai', function (): void {
 it('404 untuk tanggal yang belum ada di kalender, tanpa AI', function (): void {
     Http::fake();
 
-    $this->getJson('/hari/2030-01-01')->assertNotFound()->assertJsonPath('message', fn (string $m) => str_contains($m, '2020–2035'));
+    $this->getJson('/hari/2030-01-01')->assertNotFound()->assertJsonPath('message', fn (string $m) => str_contains($m, '2020-2035'));
     Http::assertNothingSent();
 });
 

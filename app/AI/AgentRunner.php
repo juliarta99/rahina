@@ -223,7 +223,7 @@ final class AgentRunner
             '{{min_year}}' => (string) config('rahina.calendar.min_year'),
             '{{max_year}}' => (string) config('rahina.calendar.max_year'),
             '{{max_range_days}}' => (string) config('rahina.agent.max_range_days'),
-            '{{categories}}' => implode("\n", array_map(fn (array $c): string => "- {$c['code']} — {$c['name']}", $this->catalog->all())),
+            '{{categories}}' => implode("\n", array_map(fn (array $c): string => "- {$c['code']} - {$c['name']}", $this->catalog->all())),
         ]);
     }
 }

@@ -12,7 +12,7 @@ use App\Wariga\DateRanker;
 use InvalidArgumentException;
 
 /**
- * `find_good_days`: ranking tanggal untuk kategori dalam rentang (maks 92 hari, 2020–2035).
+ * `find_good_days`: ranking tanggal untuk kategori dalam rentang.
  * Setiap tanggal yang dikembalikan dicatat di AgentContext; hanya tanggal ini yang boleh muncul di jawaban.
  */
 final class FindGoodDaysTool implements Tool
@@ -34,14 +34,14 @@ final class FindGoodDaysTool implements Tool
 
         return [
             'name' => $this->name(),
-            'description' => 'Mencari tanggal terbaik untuk kategori aktivitas dalam rentang tanggal, dari hasil perhitungan wariga. Rentang maksimal 92 hari, tahun 2020–2035.',
+            'description' => 'Mencari tanggal terbaik untuk kategori aktivitas dalam rentang tanggal, dari hasil perhitungan wariga. Rentang maksimal 92 hari, tahun 2020-2035.',
             'parameters' => [
                 'type' => 'OBJECT',
                 'properties' => [
                     'category_codes' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING', 'enum' => $codes], 'description' => 'Kode kategori aktivitas.'],
                     'start' => ['type' => 'STRING', 'description' => 'Tanggal mulai YYYY-MM-DD.'],
                     'end' => ['type' => 'STRING', 'description' => 'Tanggal akhir YYYY-MM-DD (inklusif).'],
-                    'limit' => ['type' => 'INTEGER', 'description' => 'Jumlah tanggal, 1–10. Default 5.'],
+                    'limit' => ['type' => 'INTEGER', 'description' => 'Jumlah tanggal, 1-10. Default 5.'],
                 ],
                 'required' => ['category_codes', 'start', 'end'],
             ],

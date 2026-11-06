@@ -1,52 +1,51 @@
 import { Form, Head, usePage } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
-import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { id } from '@/lang/id';
-import { edit } from '@/routes/profile';
 import type { Auth } from '@/types';
 
 type PageProps = {
     auth: Auth;
 };
 
-/** Pengaturan akun: nama & nomor HP (identitas masuk). Mengganti nomor memutus langganan WhatsApp lama. */
+/** Pengaturan akun: nama & nomor HP (identitas masuk). */
 export default function Profile() {
     const { auth } = usePage<PageProps>().props;
     const t = id.auth;
 
     return (
-        <>
-            <Head title="Pengaturan akun" />
+        <div className="flex flex-col gap-6">
+            <Head title="Pengaturan Akun" />
 
-            <h1 className="sr-only">Pengaturan akun</h1>
-
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Akun"
-                    description="Ubah nama dan nomor HP. Mengganti nomor HP akan memutus ringkasan pagi WhatsApp; aktifkan lagi di halaman Profil."
-                />
+            <section className="flex flex-col gap-4 rounded-lg border border-abu-200 bg-kertas p-5">
+                <div>
+                    <h2 className="font-display text-[22px] leading-7 font-semibold">
+                        Informasi Akun
+                    </h2>
+                    <p className="mt-1 text-sm text-abu-600">
+                        Ubah nama tampilan dan nomor HP yang digunakan untuk masuk ke akun Rahina.
+                    </p>
+                </div>
 
                 <Form
                     {...ProfileController.update.form()}
                     options={{
                         preserveScroll: true,
                     }}
-                    className="space-y-6"
+                    className="space-y-4"
                 >
                     {({ processing, errors }) => (
                         <>
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="name">{t.name}</Label>
 
                                 <Input
                                     id="name"
-                                    className="mt-1 block w-full"
+                                    className="h-11 border-abu-200 bg-kertas focus-visible:border-nila"
                                     defaultValue={auth.user.name}
                                     name="name"
                                     required
@@ -54,20 +53,17 @@ export default function Profile() {
                                     placeholder={t.namePlaceholder}
                                 />
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.name}
-                                />
+                                <InputError message={errors.name} />
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="phone">{t.phone}</Label>
 
                                 <Input
                                     id="phone"
                                     type="tel"
                                     inputMode="tel"
-                                    className="mt-1 block w-full"
+                                    className="h-11 border-abu-200 bg-kertas focus-visible:border-nila"
                                     defaultValue={
                                         typeof auth.user.phone === 'string'
                                             ? `0${auth.user.phone.slice(2)}`
@@ -79,35 +75,28 @@ export default function Profile() {
                                     placeholder={t.phonePlaceholder}
                                 />
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.phone}
-                                />
+                                <p className="text-xs text-abu-600">
+                                    Nomor ini digunakan untuk masuk ke akun Rahina. Jika Anda mengganti nomor akun, langganan WhatsApp lama akan diputus agar dapat dihubungkan kembali dengan nomor baru.
+                                </p>
+
+                                <InputError message={errors.phone} />
                             </div>
 
-                            <div className="flex items-center gap-4">
+                            <div className="pt-2">
                                 <Button
                                     disabled={processing}
                                     data-test="update-profile-button"
+                                    className="h-11 bg-nila px-5 font-medium text-white hover:bg-nila-700"
                                 >
-                                    Simpan
+                                    Simpan Perubahan
                                 </Button>
                             </div>
                         </>
                     )}
                 </Form>
-            </div>
+            </section>
 
             <DeleteUser />
-        </>
+        </div>
     );
 }
-
-Profile.layout = {
-    breadcrumbs: [
-        {
-            title: 'Pengaturan akun',
-            href: edit(),
-        },
-    ],
-};

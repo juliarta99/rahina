@@ -76,7 +76,7 @@ final class DewasaRuleValidator
         }
         $level = $rule['alahing_level'] ?? null;
         if ($level !== null && (! is_int($level) || $level < 1 || $level > 5)) {
-            $errors[] = 'alahing_level harus 1–5 atau null';
+            $errors[] = 'alahing_level harus 1-5 atau null';
         }
         if (! in_array($rule['source'] ?? null, $this->sourceCodes, true)) {
             $errors[] = 'source wajib berupa code di tabel sources: '.json_encode($rule['source'] ?? null);

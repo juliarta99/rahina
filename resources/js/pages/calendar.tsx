@@ -114,7 +114,7 @@ export default function Calendar({
                             {sasihInMonth.length > 0 && (
                                 <p lang="ban" className="text-sm text-nila-100">
                                     {id.calendar.sasihLabel}{' '}
-                                    {sasihInMonth.join(' – ')}
+                                    {sasihInMonth.join(' - ')}
                                 </p>
                             )}
                         </div>
