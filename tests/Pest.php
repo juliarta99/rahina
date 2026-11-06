@@ -1,6 +1,10 @@
 <?php
 
+use Database\Seeders\ActivityCategorySeeder;
+use Database\Seeders\SourceSeeder;
+use Database\Seeders\WarigaMasterSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /*
@@ -15,7 +19,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
- // ->use(RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -44,7 +48,52 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Seed master + import tanggal acuan; opsional muat aturan SINTETIS dan hitung dewasanya.
+ */
+function seedMasters(): void
 {
-    // ..
+    // Tanpa DewasaRuleSeeder: test memakai aturan sintetis, bukan aturan produksi.
+    test()->seed([SourceSeeder::class, WarigaMasterSeeder::class, ActivityCategorySeeder::class]);
 }
+
+function seedReferenceCalendar(bool $withSyntheticRules = true): void
+{
+    seedMasters();
+    test()->artisan('wariga:import', ['path' => base_path('tests/Fixtures/calendar/reference.jsonl')])->assertSuccessful();
+
+    if ($withSyntheticRules) {
+        test()->artisan('wariga:load-rules', ['path' => base_path('tests/Fixtures/dewasa_rules.synthetic.json')])->assertSuccessful();
+        test()->artisan('wariga:compute-dewasa')->assertSuccessful();
+    }
+}
+
+function ruleId(string $code): int
+{
+    return (int) DB::table('dewasa_rules')->where('code', $code)->value('id');
+}
+
+/**
+ * Respons Gemini dari fixture tests/Fixtures/gemini/{name}.json; `__TEXT__` diganti teks/JSON keluaran model.
+ *
+ * @param  array<string, mixed>|string|null  $text
+ * @return array<string, mixed>
+ */
+function geminiFixture(string $name, array|string|null $text = null): array
+{
+    $raw = (string) file_get_contents(base_path("tests/Fixtures/gemini/{$name}.json"));
+    $data = json_decode($raw, true);
+
+    if ($text !== null) {
+        $value = is_array($text) ? json_encode($text, JSON_UNESCAPED_UNICODE) : $text;
+        array_walk_recursive($data, function (mixed &$v) use ($value): void {
+            if ($v === '__TEXT__') {
+                $v = $value;
+            }
+        });
+    }
+
+    return $data;
+}
+
+const GEMINI_URL = 'generativelanguage.googleapis.com/*';

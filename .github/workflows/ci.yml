@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite, pdo_pgsql, mbstring
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: npm ci
+      - run: npm run build
+
+      - name: Siapkan .env (tanpa secret)
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Fixture kalender & master sesuai engine terpasang
+        run: |
+          node scripts/calendar/compute.mjs --dates tests/Fixtures/reference_days.json --out tests/Fixtures/calendar/reference.jsonl
+          node scripts/calendar/masters.mjs
+          git diff --exit-code -- tests/Fixtures/calendar database/data
+
+      - run: ./vendor/bin/pint --test
+      - run: ./vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+      # Test selalu memakai SQLite in-memory (phpunit.xml), tidak pernah ke Supabase.
+      - run: php artisan test
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run types:check

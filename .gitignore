@@ -43,3 +43,6 @@ yarn-error.log
 /boost.json
 /opencode.json
 /opencode.jsonc
+
+# Materi referensi dari situs pihak ketiga (hanya untuk validasi lokal, jangan di-commit)
+/data_dan_contoh/
