@@ -312,7 +312,7 @@ function Detail({ detail }: { detail: DayDetail }) {
                                 {id.wewaran[key] ?? key}
                             </dt>
                             <dd lang="ban" className="font-bold">
-                                {value?.name ?? '—'}
+                                {value?.name ?? '-'}
                             </dd>
                             {value?.urip !== null &&
                                 value?.urip !== undefined && (
@@ -344,7 +344,7 @@ function Detail({ detail }: { detail: DayDetail }) {
                                     : (id.paringkelan[key] ?? key)}
                             </dt>
                             <dd lang="ban" className="font-bold">
-                                {value ?? '—'}
+                                {value ?? '-'}
                             </dd>
                         </div>
                     ))}
