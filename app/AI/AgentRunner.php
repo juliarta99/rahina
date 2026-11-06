@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\AI;
 
+use App\AI\Tools\ConsultKnowledgeTool;
 use App\AI\Tools\ExplainDewasaTool;
 use App\AI\Tools\FindGoodDaysTool;
 use App\AI\Tools\GetDayTool;
@@ -43,8 +44,9 @@ final class AgentRunner
         FindGoodDaysTool $findGoodDays,
         GetDayTool $getDay,
         ExplainDewasaTool $explainDewasa,
+        ConsultKnowledgeTool $consultKnowledge,
     ) {
-        foreach ([$mapActivity, $findGoodDays, $getDay, $explainDewasa] as $tool) {
+        foreach ([$mapActivity, $findGoodDays, $getDay, $explainDewasa, $consultKnowledge] as $tool) {
             $this->tools[$tool->name()] = $tool;
         }
     }

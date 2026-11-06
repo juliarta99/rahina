@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "source": "Lontar Tri Pramana",
+    "url": "https://www.kalenderbali.org/jodoh.php",
+    "description": "Perhitungan ramalan perjodohan menurut Lontar Tri Pramana. Berdasarkan penjumlahan urip Panca Wara, Sad Wara, dan Sapta Wara kedua calon pasangan, kemudian dibagi 16 (sisa 1 sampai 16, di mana 0 sama dengan sisa 16).",
+    "cultural_notice": "Ramalan perjodohan dari Lontar Tri Pramana ini adalah warisan budaya tradisional Bali sebagai bahan pertimbangan dan kehati-hatian (bukan takdir mutlak)."
+  },
+  "urip_reference": {
+    "pancawara": {
+      "Umanis": 5,
+      "Paing": 9,
+      "Pon": 7,
+      "Wage": 4,
+      "Kliwon": 8
+    },
+    "sadwara": {
+      "Tungleh": 7,
+      "Aryang": 6,
+      "Urukung": 5,
+      "Paniron": 8,
+      "Was": 9,
+      "Maulu": 3
+    },
+    "saptawara": {
+      "Redite": 5,
+      "Soma": 4,
+      "Anggara": 3,
+      "Buda": 7,
+      "Wraspati": 8,
+      "Sukra": 6,
+      "Saniscara": 9
+    }
+  },
+  "rules": [
+    {
+      "sisa": 1,
+      "label": "Sisa 1",
+      "ramalan": "pasangan ini akan suka duka selalu berimbang.",
+      "verdict": "campur"
+    },
+    {
+      "sisa": 2,
+      "label": "Sisa 2",
+      "ramalan": "pasangan ini akan sering mengalami kesusahan.",
+      "verdict": "ala"
+    },
+    {
+      "sisa": 3,
+      "label": "Sisa 3",
+      "ramalan": "pasangan ini akan sering bertengkar dan kecewa.",
+      "verdict": "ala"
+    },
+    {
+      "sisa": 4,
+      "label": "Sisa 4",
+      "ramalan": "pasangan ini akan sulit mendapatkan keturunan.",
+      "verdict": "campur"
+    },
+    {
+      "sisa": 5,
+      "label": "Sisa 5",
+      "ramalan": "pasangan ini akan amat baik, rukun dan bahagia.",
+      "verdict": "ayu"
+    },
+    {
+      "sisa": 6,
+      "label": "Sisa 6",
+      "ramalan": "pasangan ini akan buruk, sering sakit-sakitan.",
+      "verdict": "ala"
+    },
+    {
+      "sisa": 7,
+      "label": "Sisa 7",
+      "ramalan": "pasangan ini akan suka duka, akhirnya bahagia.",
+      "verdict": "ayu"
+    },
+    {
+      "sisa": 8,
+      "label": "Sisa 8",
+      "ramalan": "pasangan ini akan buruk, hidup serba kurang.",
+      "verdict": "ala"
+    },
+    {
+      "sisa": 9,
+      "label": "Sisa 9",
+      "ramalan": "pasangan ini akan amat buruk, selalu menderita.",
+      "verdict": "ala"
+    },
+    {
+      "sisa": 10,
+      "label": "Sisa 10",
+      "ramalan": "pasangan ini akan baik, disegani dan berwibawa.",
+      "verdict": "ayu"
+    },
+    {
+      "sisa": 11,
+      "label": "Sisa 11",
+      "ramalan": "pasangan ini akan baik, hidup cukup dan senang.",
+      "verdict": "ayu"
+    },
+    {
+      "sisa": 12,
+      "label": "Sisa 12",
+      "ramalan": "pasangan ini akan murah rejeki dan hidup rukun.",
+      "verdict": "ayu"
+    },
+    {
+      "sisa": 13,
+      "label": "Sisa 13",
+      "ramalan": "pasangan ini akan baik, kaya dan panjang umur.",
+      "verdict": "campur"
+    },
+    {
+      "sisa": 14,
+      "label": "Sisa 14",
+      "ramalan": "pasangan ini akan hidup tenang dan bahagia.",
+      "verdict": "ayu"
+    },
+    {
+      "sisa": 15,
+      "label": "Sisa 15",
+      "ramalan": "pasangan ini akan mandul, sering dapat kesusahan.",
+      "verdict": "ala"
+    },
+    {
+      "sisa": 0,
+      "label": "Sisa 0 (atau 16)",
+      "ramalan": "pasangan ini akan hidup rukun dan bahagia.",
+      "verdict": "ayu"
+    }
+  ]
+}

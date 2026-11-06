@@ -240,7 +240,9 @@ final class OutputGuard
         }
 
         $options = $needsClarification ? $this->clarificationOptions($output['clarification_options'] ?? [], $context) : [];
-        $needsClarification = $needsClarification && $options !== [];
+        if ($forcedClarification && $options === []) {
+            $needsClarification = false;
+        }
 
         $optionCodes = array_column($options, 'code');
         $notice = ! $outOfScope && (($output['cultural_notice'] ?? false) === true
@@ -284,7 +286,7 @@ final class OutputGuard
     /** Teks menyebut tanggal kalender atau nama dewasa yang tidak ada di hasil tool. */
     private function mentionsUnknown(string $text, AgentContext $context): bool
     {
-        $allowed = array_keys($context->dates);
+        $allowed = array_values(array_unique([...array_keys($context->dates), ...$context->allowedDates]));
         if (preg_match_all('/\b(\d{4}-\d{2}-\d{2})\b/', $text, $iso) > 0 && array_diff($iso[1], $allowed) !== []) {
             return true;
         }

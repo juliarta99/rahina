@@ -316,6 +316,37 @@ it('tidak menyimpan teks pertanyaan atau teks aktivitas di log', function (): vo
         ->and($row['input_hash'])->toHaveLength(64);
 });
 
+it('dapat menjawab ramalan bintang melalui consult_knowledge tool', function (): void {
+    Http::fake([GEMINI_URL => Http::sequence()
+        ->push(geminiCall('consult_knowledge', ['topic' => 'bintang', 'query' => 'Scorpio']))
+        ->push(finalAnswer([
+            'answer' => 'Zodiak Scorpio memiliki simbol kalajengking dengan karakter ulet.',
+            'dates' => [],
+            'cultural_notice' => true,
+        ]))]);
+
+    $answer = ask('Bagaimana ramalan bintang Scorpio?');
+
+    expect($answer->generatedBy)->toBe('ai')
+        ->and($answer->answer)->toContain('Scorpio')
+        ->and($answer->culturalNotice)->toBeTrue();
+});
+
+it('meminta klarifikasi kepastian bila pertanyaan jodoh ambigu tanpa tanggal', function (): void {
+    Http::fake([GEMINI_URL => Http::sequence()
+        ->push(geminiCall('consult_knowledge', ['topic' => 'jodoh']))
+        ->push(finalAnswer([
+            'answer' => 'Untuk menghitung kecocokan jodoh menurut Lontar Tri Pramana, mohon sebutkan tanggal lahir Anda dan pasangan.',
+            'dates' => [],
+            'needs_clarification' => true,
+        ]))]);
+
+    $answer = ask('Bagaimana kecocokan jodoh saya?');
+
+    expect($answer->needsClarification)->toBeTrue()
+        ->and($answer->answer)->toContain('tanggal lahir');
+});
+
 describe('endpoint /tanya', function (): void {
     it('menampilkan halaman Tanya Wariga', function (): void {
         $this->get('/tanya')->assertOk()->assertInertia(fn ($page) => $page->component('ask')->missing('persona'));

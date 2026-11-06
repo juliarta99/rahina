@@ -41,6 +41,12 @@ final class AgentContext
     /** Kandidat kategori saat map_activity ragu; selama terisi, find_good_days ditolak sampai pengguna memilih. @var list<string>|null */
     public ?array $pendingClarification = null;
 
+    /** Tanggal tambahan yang diizinkan disebut di teks jawaban (misal tanggal lahir yang dikonsultasikan). @var list<string> */
+    public array $allowedDates = [];
+
+    /** Menandakan apakah tool meminta catatan budaya/etika ditampilkan ke pengguna. */
+    public bool $culturalNoticeRequested = false;
+
     public function __construct(public readonly string $today) {}
 
     /**
@@ -82,6 +88,10 @@ final class AgentContext
 
     public function requiresCulturalNotice(): bool
     {
+        if ($this->culturalNoticeRequested) {
+            return true;
+        }
+
         foreach ($this->categories as $c) {
             if ($c['requires_cultural_notice']) {
                 return true;
