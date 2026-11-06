@@ -1,0 +1,798 @@
+{
+    "engine": "balinese-date-js@1.0.1",
+    "wuku": [
+        {
+            "id": 1,
+            "name": "Sinta",
+            "urip": 7
+        },
+        {
+            "id": 2,
+            "name": "Landep",
+            "urip": 1
+        },
+        {
+            "id": 3,
+            "name": "Ukir",
+            "urip": 4
+        },
+        {
+            "id": 4,
+            "name": "Kulantir",
+            "urip": 6
+        },
+        {
+            "id": 5,
+            "name": "Tolu",
+            "urip": 5
+        },
+        {
+            "id": 6,
+            "name": "Gumbreg",
+            "urip": 8
+        },
+        {
+            "id": 7,
+            "name": "Wariga",
+            "urip": 9
+        },
+        {
+            "id": 8,
+            "name": "Warigadean",
+            "urip": 3
+        },
+        {
+            "id": 9,
+            "name": "Julungwangi",
+            "urip": 7
+        },
+        {
+            "id": 10,
+            "name": "Sungsang",
+            "urip": 1
+        },
+        {
+            "id": 11,
+            "name": "Dungulan",
+            "urip": 4
+        },
+        {
+            "id": 12,
+            "name": "Kuningan",
+            "urip": 6
+        },
+        {
+            "id": 13,
+            "name": "Langkir",
+            "urip": 5
+        },
+        {
+            "id": 14,
+            "name": "Medangsia",
+            "urip": 8
+        },
+        {
+            "id": 15,
+            "name": "Pujut",
+            "urip": 9
+        },
+        {
+            "id": 16,
+            "name": "Pahang",
+            "urip": 3
+        },
+        {
+            "id": 17,
+            "name": "Krulut",
+            "urip": 7
+        },
+        {
+            "id": 18,
+            "name": "Merakih",
+            "urip": 1
+        },
+        {
+            "id": 19,
+            "name": "Tambir",
+            "urip": 4
+        },
+        {
+            "id": 20,
+            "name": "Medangkungan",
+            "urip": 6
+        },
+        {
+            "id": 21,
+            "name": "Matal",
+            "urip": 5
+        },
+        {
+            "id": 22,
+            "name": "Uye",
+            "urip": 8
+        },
+        {
+            "id": 23,
+            "name": "Menail",
+            "urip": 9
+        },
+        {
+            "id": 24,
+            "name": "Prangbakat",
+            "urip": 3
+        },
+        {
+            "id": 25,
+            "name": "Bala",
+            "urip": 7
+        },
+        {
+            "id": 26,
+            "name": "Ugu",
+            "urip": 1
+        },
+        {
+            "id": 27,
+            "name": "Wayang",
+            "urip": 4
+        },
+        {
+            "id": 28,
+            "name": "Klawu",
+            "urip": 6
+        },
+        {
+            "id": 29,
+            "name": "Dukut",
+            "urip": 5
+        },
+        {
+            "id": 30,
+            "name": "Watugunung",
+            "urip": 8
+        }
+    ],
+    "wewaran": [
+        {
+            "cycle": 1,
+            "position": 1,
+            "name": "Luang",
+            "urip": 1
+        },
+        {
+            "cycle": 2,
+            "position": 1,
+            "name": "Menga",
+            "urip": 5
+        },
+        {
+            "cycle": 2,
+            "position": 2,
+            "name": "Pepet",
+            "urip": 4
+        },
+        {
+            "cycle": 3,
+            "position": 1,
+            "name": "Pasah",
+            "urip": 9
+        },
+        {
+            "cycle": 3,
+            "position": 2,
+            "name": "Beteng",
+            "urip": 4
+        },
+        {
+            "cycle": 3,
+            "position": 3,
+            "name": "Kajeng",
+            "urip": 7
+        },
+        {
+            "cycle": 4,
+            "position": 1,
+            "name": "Sri",
+            "urip": 6
+        },
+        {
+            "cycle": 4,
+            "position": 2,
+            "name": "Laba",
+            "urip": 5
+        },
+        {
+            "cycle": 4,
+            "position": 3,
+            "name": "Jaya",
+            "urip": 1
+        },
+        {
+            "cycle": 4,
+            "position": 4,
+            "name": "Menala",
+            "urip": 8
+        },
+        {
+            "cycle": 5,
+            "position": 1,
+            "name": "Paing",
+            "urip": 9
+        },
+        {
+            "cycle": 5,
+            "position": 2,
+            "name": "Pon",
+            "urip": 7
+        },
+        {
+            "cycle": 5,
+            "position": 3,
+            "name": "Wage",
+            "urip": 4
+        },
+        {
+            "cycle": 5,
+            "position": 4,
+            "name": "Kliwon",
+            "urip": 8
+        },
+        {
+            "cycle": 5,
+            "position": 5,
+            "name": "Umanis",
+            "urip": 5
+        },
+        {
+            "cycle": 6,
+            "position": 1,
+            "name": "Tungleh",
+            "urip": 7
+        },
+        {
+            "cycle": 6,
+            "position": 2,
+            "name": "Aryang",
+            "urip": 6
+        },
+        {
+            "cycle": 6,
+            "position": 3,
+            "name": "Urukung",
+            "urip": 5
+        },
+        {
+            "cycle": 6,
+            "position": 4,
+            "name": "Paniron",
+            "urip": 8
+        },
+        {
+            "cycle": 6,
+            "position": 5,
+            "name": "Was",
+            "urip": 9
+        },
+        {
+            "cycle": 6,
+            "position": 6,
+            "name": "Maulu",
+            "urip": 3
+        },
+        {
+            "cycle": 7,
+            "position": 1,
+            "name": "Redite",
+            "urip": 5
+        },
+        {
+            "cycle": 7,
+            "position": 2,
+            "name": "Soma",
+            "urip": 4
+        },
+        {
+            "cycle": 7,
+            "position": 3,
+            "name": "Anggara",
+            "urip": 3
+        },
+        {
+            "cycle": 7,
+            "position": 4,
+            "name": "Buda",
+            "urip": 7
+        },
+        {
+            "cycle": 7,
+            "position": 5,
+            "name": "Wraspati",
+            "urip": 8
+        },
+        {
+            "cycle": 7,
+            "position": 6,
+            "name": "Sukra",
+            "urip": 6
+        },
+        {
+            "cycle": 7,
+            "position": 7,
+            "name": "Saniscara",
+            "urip": 9
+        },
+        {
+            "cycle": 8,
+            "position": 1,
+            "name": "Sri",
+            "urip": 6
+        },
+        {
+            "cycle": 8,
+            "position": 2,
+            "name": "Indra",
+            "urip": 5
+        },
+        {
+            "cycle": 8,
+            "position": 3,
+            "name": "Guru",
+            "urip": 8
+        },
+        {
+            "cycle": 8,
+            "position": 4,
+            "name": "Yama",
+            "urip": 9
+        },
+        {
+            "cycle": 8,
+            "position": 5,
+            "name": "Ludra",
+            "urip": 3
+        },
+        {
+            "cycle": 8,
+            "position": 6,
+            "name": "Brahma",
+            "urip": 7
+        },
+        {
+            "cycle": 8,
+            "position": 7,
+            "name": "Kala",
+            "urip": 1
+        },
+        {
+            "cycle": 8,
+            "position": 8,
+            "name": "Uma",
+            "urip": 4
+        },
+        {
+            "cycle": 9,
+            "position": 1,
+            "name": "Dangu",
+            "urip": 5
+        },
+        {
+            "cycle": 9,
+            "position": 2,
+            "name": "Jangur",
+            "urip": 8
+        },
+        {
+            "cycle": 9,
+            "position": 3,
+            "name": "Gigis",
+            "urip": 9
+        },
+        {
+            "cycle": 9,
+            "position": 4,
+            "name": "Nohan",
+            "urip": 3
+        },
+        {
+            "cycle": 9,
+            "position": 5,
+            "name": "Ogan",
+            "urip": 7
+        },
+        {
+            "cycle": 9,
+            "position": 6,
+            "name": "Erangan",
+            "urip": 1
+        },
+        {
+            "cycle": 9,
+            "position": 7,
+            "name": "Urungan",
+            "urip": 4
+        },
+        {
+            "cycle": 9,
+            "position": 8,
+            "name": "Tulus",
+            "urip": 6
+        },
+        {
+            "cycle": 9,
+            "position": 9,
+            "name": "Dadi",
+            "urip": 8
+        },
+        {
+            "cycle": 10,
+            "position": 1,
+            "name": "Pandita",
+            "urip": 5
+        },
+        {
+            "cycle": 10,
+            "position": 2,
+            "name": "Pati",
+            "urip": 7
+        },
+        {
+            "cycle": 10,
+            "position": 3,
+            "name": "Suka",
+            "urip": 10
+        },
+        {
+            "cycle": 10,
+            "position": 4,
+            "name": "Duka",
+            "urip": 4
+        },
+        {
+            "cycle": 10,
+            "position": 5,
+            "name": "Sri",
+            "urip": 6
+        },
+        {
+            "cycle": 10,
+            "position": 6,
+            "name": "Manuh",
+            "urip": 2
+        },
+        {
+            "cycle": 10,
+            "position": 7,
+            "name": "Manusa",
+            "urip": 3
+        },
+        {
+            "cycle": 10,
+            "position": 8,
+            "name": "Raja",
+            "urip": 8
+        },
+        {
+            "cycle": 10,
+            "position": 9,
+            "name": "Dewa",
+            "urip": 9
+        },
+        {
+            "cycle": 10,
+            "position": 10,
+            "name": "Raksasa",
+            "urip": 1
+        }
+    ],
+    "ingkel": ["Wong", "Sato", "Mina", "Manuk", "Taru", "Buku"],
+    "sasih": [
+        {
+            "id": 1,
+            "name": "Kasa",
+            "base_id": 1,
+            "is_intercalary": false
+        },
+        {
+            "id": 2,
+            "name": "Karo",
+            "base_id": 2,
+            "is_intercalary": false
+        },
+        {
+            "id": 3,
+            "name": "Katiga",
+            "base_id": 3,
+            "is_intercalary": false
+        },
+        {
+            "id": 4,
+            "name": "Kapat",
+            "base_id": 4,
+            "is_intercalary": false
+        },
+        {
+            "id": 5,
+            "name": "Kalima",
+            "base_id": 5,
+            "is_intercalary": false
+        },
+        {
+            "id": 6,
+            "name": "Kanem",
+            "base_id": 6,
+            "is_intercalary": false
+        },
+        {
+            "id": 7,
+            "name": "Kapitu",
+            "base_id": 7,
+            "is_intercalary": false
+        },
+        {
+            "id": 8,
+            "name": "Kawolu",
+            "base_id": 8,
+            "is_intercalary": false
+        },
+        {
+            "id": 9,
+            "name": "Kasanga",
+            "base_id": 9,
+            "is_intercalary": false
+        },
+        {
+            "id": 10,
+            "name": "Kadasa",
+            "base_id": 10,
+            "is_intercalary": false
+        },
+        {
+            "id": 11,
+            "name": "Destha",
+            "base_id": 11,
+            "is_intercalary": false
+        },
+        {
+            "id": 12,
+            "name": "Sadha",
+            "base_id": 12,
+            "is_intercalary": false
+        },
+        {
+            "id": 13,
+            "name": "Mala Destha",
+            "base_id": 11,
+            "is_intercalary": true
+        },
+        {
+            "id": 14,
+            "name": "Mala Sadha",
+            "base_id": 12,
+            "is_intercalary": true
+        },
+        {
+            "id": 15,
+            "name": "Nampih Destha",
+            "base_id": 11,
+            "is_intercalary": true
+        },
+        {
+            "id": 16,
+            "name": "Nampih Katiga",
+            "base_id": 3,
+            "is_intercalary": true
+        },
+        {
+            "id": 17,
+            "name": "Nampih Kasa",
+            "base_id": 1,
+            "is_intercalary": true
+        },
+        {
+            "id": 18,
+            "name": "Nampih Kadasa",
+            "base_id": 10,
+            "is_intercalary": true
+        },
+        {
+            "id": 19,
+            "name": "Nampih Karo",
+            "base_id": 2,
+            "is_intercalary": true
+        },
+        {
+            "id": 20,
+            "name": "Nampih Sadha",
+            "base_id": 12,
+            "is_intercalary": true
+        }
+    ],
+    "rahinan": [
+        {
+            "id": 1,
+            "slug": "soma_ribek",
+            "name": "Soma Ribek",
+            "kind": "pawukon"
+        },
+        {
+            "id": 2,
+            "slug": "sabuh_emas",
+            "name": "Sabuh Emas",
+            "kind": "pawukon"
+        },
+        {
+            "id": 3,
+            "slug": "pager_wesi",
+            "name": "Pager Wesi",
+            "kind": "pawukon"
+        },
+        {
+            "id": 4,
+            "slug": "tumpek_landep",
+            "name": "Tumpek Landep",
+            "kind": "pawukon"
+        },
+        {
+            "id": 5,
+            "slug": "tumpek_uduh",
+            "name": "Tumpek Uduh",
+            "kind": "pawukon"
+        },
+        {
+            "id": 6,
+            "slug": "sugihan_jawa",
+            "name": "Sugihan Jawa",
+            "kind": "pawukon"
+        },
+        {
+            "id": 7,
+            "slug": "sugihan_bali",
+            "name": "Sugihan Bali",
+            "kind": "pawukon"
+        },
+        {
+            "id": 8,
+            "slug": "penyekeban_galungan",
+            "name": "Penyekeban Galungan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 9,
+            "slug": "penyajan_galungan",
+            "name": "Penyajan Galungan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 10,
+            "slug": "penampahan_galungan",
+            "name": "Penampahan Galungan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 11,
+            "slug": "galungan",
+            "name": "Galungan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 12,
+            "slug": "manis_galungan",
+            "name": "Manis Galungan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 13,
+            "slug": "pemaridan_guru",
+            "name": "Pemaridan Guru",
+            "kind": "pawukon"
+        },
+        {
+            "id": 14,
+            "slug": "ulihan",
+            "name": "Ulihan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 15,
+            "slug": "pemacekan_agung",
+            "name": "Pemacekan Agung",
+            "kind": "pawukon"
+        },
+        {
+            "id": 16,
+            "slug": "penampahan_kuningan",
+            "name": "Penampahan Kuningan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 17,
+            "slug": "kuningan",
+            "name": "Kuningan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 18,
+            "slug": "pegat_uwakan",
+            "name": "Pegat Uwakan",
+            "kind": "pawukon"
+        },
+        {
+            "id": 19,
+            "slug": "tumpek_kandang",
+            "name": "Tumpek Kandang",
+            "kind": "pawukon"
+        },
+        {
+            "id": 20,
+            "slug": "tumpek_wayang",
+            "name": "Tumpek Wayang",
+            "kind": "pawukon"
+        },
+        {
+            "id": 21,
+            "slug": "saraswati",
+            "name": "Saraswati",
+            "kind": "pawukon"
+        },
+        {
+            "id": 22,
+            "slug": "banyu_pinaruh",
+            "name": "Banyu Pinaruh",
+            "kind": "pawukon"
+        },
+        {
+            "id": 23,
+            "slug": "siwa_ratri",
+            "name": "Siwa Ratri",
+            "kind": "sasih"
+        },
+        {
+            "id": 24,
+            "slug": "tawur_agung_kasanga",
+            "name": "Tawur Agung Kasanga",
+            "kind": "sasih"
+        },
+        {
+            "id": 25,
+            "slug": "nyepi",
+            "name": "Nyepi",
+            "kind": "sasih"
+        },
+        {
+            "id": 26,
+            "slug": "ngembak_geni",
+            "name": "Ngembak Geni",
+            "kind": "sasih"
+        },
+        {
+            "id": 27,
+            "slug": "buda_cemeng",
+            "name": "Buda Cemeng",
+            "kind": "pawukon"
+        },
+        {
+            "id": 28,
+            "slug": "anggara_kasih",
+            "name": "Anggara Kasih",
+            "kind": "pawukon"
+        },
+        {
+            "id": 29,
+            "slug": "kajeng_kliwon",
+            "name": "Kajeng Kliwon",
+            "kind": "kajeng_kliwon"
+        },
+        {
+            "id": 30,
+            "slug": "purnama",
+            "name": "Purnama",
+            "kind": "purnama_tilem"
+        },
+        {
+            "id": 31,
+            "slug": "tilem",
+            "name": "Tilem",
+            "kind": "purnama_tilem"
+        }
+    ]
+}
