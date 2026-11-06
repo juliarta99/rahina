@@ -1,0 +1,395 @@
+{
+    "_note": "Tanggal acuan M1. Nilai 'expected' TIDAK diambil dari engine, melainkan dari fakta publik (libur nasional/daerah) dan siklus pawukon 210 hari. Isi 'validated_by'/'validated_at' setelah dicocokkan manual dengan kalender cetak. TODO tim: tambah purnama, tilem, ngunaratri, dan nampih sasih dari kalender cetak (lihat docs/CULTURAL_REVIEW.md CR-004). Nyepi 2020-03-25: engine memberi penanggal 2 karena 2020-03-24 Tilem ngunaratri (15+1); perlu dicek di kalender cetak (CR-004).",
+    "days": [
+        {
+            "date": "2020-02-19",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2020-03-25",
+            "label": "Nyepi 2020 (Tahun Baru Saka 1942)",
+            "basis": "Libur nasional (SKB 3 Menteri); Nyepi jatuh di awal sasih Kadasa (penanggal)",
+            "expected": {
+                "rahinan": ["nyepi"],
+                "sasih": "Kadasa",
+                "is_penanggal": true,
+                "saka_year": 1942
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2020-09-16",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2021-03-14",
+            "label": "Nyepi 2021 (Tahun Baru Saka 1943)",
+            "basis": "Libur nasional (SKB 3 Menteri); Nyepi jatuh di awal sasih Kadasa (penanggal)",
+            "expected": {
+                "rahinan": ["nyepi"],
+                "sasih": "Kadasa",
+                "is_penanggal": true,
+                "saka_year": 1943
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2021-04-14",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2021-04-24",
+            "label": "Kuningan",
+            "basis": "Libur Pemprov Bali; Saniscara Kliwon wuku Kuningan (Galungan + 10 hari)",
+            "expected": {
+                "rahinan": ["kuningan"],
+                "wuku": "Kuningan",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2021-11-10",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2022-03-03",
+            "label": "Nyepi 2022 (Tahun Baru Saka 1944)",
+            "basis": "Libur nasional (SKB 3 Menteri); Nyepi jatuh di awal sasih Kadasa (penanggal)",
+            "expected": {
+                "rahinan": ["nyepi"],
+                "sasih": "Kadasa",
+                "is_penanggal": true,
+                "saka_year": 1944
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2022-06-08",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2022-06-18",
+            "label": "Kuningan",
+            "basis": "Libur Pemprov Bali; Saniscara Kliwon wuku Kuningan (Galungan + 10 hari)",
+            "expected": {
+                "rahinan": ["kuningan"],
+                "wuku": "Kuningan",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2023-01-04",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2023-03-22",
+            "label": "Nyepi 2023 (Tahun Baru Saka 1945)",
+            "basis": "Libur nasional (SKB 3 Menteri); Nyepi jatuh di awal sasih Kadasa (penanggal)",
+            "expected": {
+                "rahinan": ["nyepi"],
+                "sasih": "Kadasa",
+                "is_penanggal": true,
+                "saka_year": 1945
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2023-08-02",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2023-08-12",
+            "label": "Kuningan",
+            "basis": "Libur Pemprov Bali; Saniscara Kliwon wuku Kuningan (Galungan + 10 hari)",
+            "expected": {
+                "rahinan": ["kuningan"],
+                "wuku": "Kuningan",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2024-02-28",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2024-03-09",
+            "label": "Kuningan",
+            "basis": "Libur Pemprov Bali; Saniscara Kliwon wuku Kuningan (Galungan + 10 hari)",
+            "expected": {
+                "rahinan": ["kuningan"],
+                "wuku": "Kuningan",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2024-03-11",
+            "label": "Nyepi 2024 (Tahun Baru Saka 1946)",
+            "basis": "Libur nasional (SKB 3 Menteri); Nyepi jatuh di awal sasih Kadasa (penanggal)",
+            "expected": {
+                "rahinan": ["nyepi"],
+                "sasih": "Kadasa",
+                "is_penanggal": true,
+                "saka_year": 1946
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2024-09-25",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2024-10-05",
+            "label": "Kuningan",
+            "basis": "Libur Pemprov Bali; Saniscara Kliwon wuku Kuningan (Galungan + 10 hari)",
+            "expected": {
+                "rahinan": ["kuningan"],
+                "wuku": "Kuningan",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2025-02-08",
+            "label": "Saraswati",
+            "basis": "Saniscara Umanis wuku Watugunung (Galungan + 136 hari, siklus pawukon)",
+            "expected": {
+                "rahinan": ["saraswati"],
+                "wuku": "Watugunung",
+                "saptawara": "Saniscara",
+                "pancawara": "Umanis"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2025-02-22",
+            "label": "Tumpek Landep",
+            "basis": "Saniscara Kliwon wuku Landep (Galungan - 60 hari, siklus pawukon)",
+            "expected": {
+                "rahinan": ["tumpek_landep"],
+                "wuku": "Landep",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2025-03-29",
+            "label": "Nyepi 2025 (Tahun Baru Saka 1947)",
+            "basis": "Libur nasional (SKB 3 Menteri); Nyepi jatuh di awal sasih Kadasa (penanggal)",
+            "expected": {
+                "rahinan": ["nyepi"],
+                "sasih": "Kadasa",
+                "is_penanggal": true,
+                "saka_year": 1947
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2025-04-23",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2025-05-03",
+            "label": "Kuningan",
+            "basis": "Libur Pemprov Bali; Saniscara Kliwon wuku Kuningan (Galungan + 10 hari)",
+            "expected": {
+                "rahinan": ["kuningan"],
+                "wuku": "Kuningan",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2025-09-06",
+            "label": "Saraswati",
+            "basis": "Saniscara Umanis wuku Watugunung (Galungan + 136 hari, siklus pawukon)",
+            "expected": {
+                "rahinan": ["saraswati"],
+                "wuku": "Watugunung",
+                "saptawara": "Saniscara",
+                "pancawara": "Umanis"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2025-11-19",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2025-11-29",
+            "label": "Kuningan",
+            "basis": "Libur Pemprov Bali; Saniscara Kliwon wuku Kuningan (Galungan + 10 hari)",
+            "expected": {
+                "rahinan": ["kuningan"],
+                "wuku": "Kuningan",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2026-03-19",
+            "label": "Nyepi 2026 (Tahun Baru Saka 1948)",
+            "basis": "Libur nasional (SKB 3 Menteri); Nyepi jatuh di awal sasih Kadasa (penanggal)",
+            "expected": {
+                "rahinan": ["nyepi"],
+                "sasih": "Kadasa",
+                "is_penanggal": true,
+                "saka_year": 1948
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2026-06-17",
+            "label": "Galungan",
+            "basis": "Libur Pemprov Bali; Buda Kliwon wuku Dungulan",
+            "expected": {
+                "rahinan": ["galungan"],
+                "wuku": "Dungulan",
+                "saptawara": "Buda",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        },
+        {
+            "date": "2026-06-27",
+            "label": "Kuningan",
+            "basis": "Libur Pemprov Bali; Saniscara Kliwon wuku Kuningan (Galungan + 10 hari)",
+            "expected": {
+                "rahinan": ["kuningan"],
+                "wuku": "Kuningan",
+                "saptawara": "Saniscara",
+                "pancawara": "Kliwon"
+            },
+            "validated_by": null,
+            "validated_at": null
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "role": "model",
+                "parts": [
+                    {
+                        "text": "menimbang data...",
+                        "thought": true
+                    },
+                    {
+                        "text": "__TEXT__"
+                    },
+                    {
+                        "functionCall": {
+                            "name": "get_day",
+                            "args": {
+                                "date": "2025-04-23"
+                            }
+                        }
+                    }
+                ]
+            },
+            "finishReason": "STOP"
+        }
+    ],
+    "modelVersion": "test-model-001"
+}
