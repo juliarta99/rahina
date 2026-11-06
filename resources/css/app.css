@@ -8,14 +8,34 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+    /* Rahina — docs/DESIGN_SYSTEM.md §11 */
+    --color-mangsi: #1c1b19;
+    --color-kertas: #fffdf8;
+    --color-lontar: #f6f1e7;
+    --color-abu-600: #66615a;
+    --color-abu-400: #a39d93;
+    --color-abu-200: #ddd6c9;
+    --color-nila: #23466b;
+    --color-nila-700: #183451;
+    --color-nila-100: #dce5ef;
+    --color-kunyit: #d99a1e;
+    --color-kunyit-800: #7a520a;
+    --color-kunyit-100: #faebc8;
+    --color-ayu: #2e7049;
+    --color-ayu-100: #ddede2;
+    --color-ala: #a8352b;
+    --color-ala-100: #f6dcd8;
+    --color-campur: #8a5a14;
 
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
+    --font-sans: 'Public Sans', ui-sans-serif, sans-serif;
+    --font-display: 'Spectral', Georgia, serif;
+    --font-aksara: 'Noto Sans Balinese', serif;
+
+    --ease-rahina: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -68,8 +88,8 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
+    --primary: #23466b; /* nila (DESIGN_SYSTEM.md §2) */
+    --primary-foreground: #ffffff;
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);

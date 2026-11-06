@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        // Webhook Fonnte tidak membawa token CSRF; diamankan dengan secret turunan APP_KEY + cek device.
+        $middleware->validateCsrfTokens(except: ['webhooks/fonnte/*']);
 
         $middleware->web(append: [
             HandleAppearance::class,

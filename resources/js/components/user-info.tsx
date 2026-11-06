@@ -23,7 +23,9 @@ export function UserInfo({
                 <span className="truncate font-medium">{user.name}</span>
                 {showEmail && (
                     <span className="truncate text-xs text-muted-foreground">
-                        {user.email}
+                        {typeof user.phone === 'string'
+                            ? `0${user.phone.slice(2)}`
+                            : user.email}
                     </span>
                 )}
             </div>
