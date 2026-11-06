@@ -29,7 +29,7 @@ final class GetDayTool implements Tool
     {
         return [
             'name' => $this->name(),
-            'description' => 'Mengambil detail kalender Bali satu tanggal: wewaran, wuku, sasih, penanggal/pangelong, rahinan, dan dewasa beserta efek per kategori.',
+            'description' => 'Mengambil detail kalender Bali satu tanggal (2020-2035): wewaran, wuku, sasih, penanggal/pangelong, rahinan, dan dewasa. Untuk ramalan/karakter kelahiran seseorang (tahun berapa pun seperti 2006, 2001, dll.), gunakan consult_knowledge.',
             'parameters' => [
                 'type' => 'OBJECT',
                 'properties' => [

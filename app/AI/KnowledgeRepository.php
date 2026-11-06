@@ -12,7 +12,7 @@ use InvalidArgumentException;
 /**
  * Knowledge Repository & In-Memory RAG Engine untuk data kearifan lokal Kalender Bali:
  * 1. Ramalan Bintang / Zodiak (12 zodiak)
- * 2. Numerologi Garis Hidup (Life Path 1–9)
+ * 2. Numerologi Garis Hidup (Life Path 1-9)
  * 3. Perjodohan Lontar Tri Pramana (Kombinasi Urip Panca/Sad/Sapta Wara mod 16)
  * 4. Kamus Karakteristik Kelahiran & Arti Hari (Wewaran, Wuku, Lintang, Pratiti)
  */
@@ -533,7 +533,6 @@ final class KnowledgeRepository
             ),
         ];
 
-        // Jika ada di kalender (2020-2035), tambahkan detail wuku & wewaran lengkap
         if ($this->calendar !== null) {
             $year = (int) $date->format('Y');
             if ($year >= 2020 && $year <= 2035) {
