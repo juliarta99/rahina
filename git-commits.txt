@@ -1,0 +1,32 @@
+# ==============================================================================
+# PANDUAN GIT COMMIT RAHINA
+# Dihasilkan untuk perubahan fitur halaman publik, penyesuaian jadwal WhatsApp,
+# dan perbaikan UI / navigasi responsif.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# OPSI 1: COMMIT BERTAHAP (DIREKOMENDASIKAN - LEBIH RAPI & TERSTRUKTUR)
+# ------------------------------------------------------------------------------
+
+### 1. Commit Pengaturan Jadwal WhatsApp (07:00 WITA) & Dokumentasi
+git add .env.example config/messaging.php routes/console.php app/Messaging/InboundRouter.php scripts/generate_og_image.php docs/PROPOSAL_DRAFT.md docs/SUPABASE.md docs/WHATSAPP.md
+git commit -m "chore(wa): perbarui jadwal pesan pagi 07:00 WITA dan konsol scheduler"
+
+
+### 2. Commit Halaman Publik Baru, Custom Error, Routing & Handler
+git add bootstrap/app.php routes/web.php resources/js/app.tsx resources/js/pages/about.tsx resources/js/pages/privacy.tsx resources/js/pages/terms.tsx resources/js/pages/error.tsx tests/Feature/InformationalPagesTest.php
+git commit -m "feat(pages): tambah halaman tentang, privasi, syarat ketentuan, dan custom error Inertia"
+
+
+### 3. Commit Komponen UI Terpadu, Footer Global & Sinkronisasi Tampilan
+git add resources/js/components/rahina/site-footer.tsx resources/js/components/rahina/site-nav.tsx resources/js/components/rahina/rahina-header.tsx resources/js/pages/welcome.tsx resources/js/pages/ask.tsx resources/js/pages/calendar.tsx resources/js/pages/profil.tsx
+git commit -m "feat(ui): integrasi footer terpadu, navigasi responsif, dan sinkronisasi tampilan"
+
+
+# ------------------------------------------------------------------------------
+# OPSI 2: SATU COMMIT SEKALIGUS (ALL-IN-ONE)
+# ------------------------------------------------------------------------------
+# Jika ingin langsung menambahkan seluruh file dalam 1 commit tunggal:
+
+git add .
+git commit -m "feat: halaman publik baru, custom error, footer global, dan penyesuaian jadwal wa 07:00 WITA"
