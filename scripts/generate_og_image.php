@@ -62,7 +62,7 @@ imagestring($image, 5, 290, 240, "Kearifan Tradisional Bali & Kecerdasan Buatan 
 imagestring($image, 4, 290, 290, "Perhitungan Wariga Presisi 2020 - 2035", $abu);
 imagestring($image, 4, 290, 320, "Wewaran, 30 Wuku, Sasih, & Dewasa Ayu Lengkap", $abu);
 imagestring($image, 4, 290, 350, "Asisten AI Berlandaskan Lontar Sundarigama & Tri Pramana", $abu);
-imagestring($image, 4, 290, 380, "Notifikasi Ringkasan Harian WhatsApp Otomatis (06:00 WITA)", $abu);
+imagestring($image, 4, 290, 380, "Notifikasi Ringkasan Harian WhatsApp Otomatis (07:00 WITA)", $abu);
 
 // Footer bar
 imagefilledrectangle($image, 30, $height - 80, $width - 30, $height - 30, $terakota);

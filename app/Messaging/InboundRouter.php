@@ -93,7 +93,7 @@ final class InboundRouter
 
         $this->sender->send($subscription, 'system', implode("\n", [
             '*Rahina Pagi aktif.*',
-            'Anda akan menerima ringkasan hari menurut wariga setiap pukul 06.00 WITA.',
+            'Anda akan menerima ringkasan hari menurut wariga setiap pukul 07.00 WITA.',
             'Simpan nomor ini agar pesan tidak masuk spam. Balas pesan ini kapan saja untuk bertanya hari baik.',
             'Ketik BERHENTI untuk berhenti, BANTUAN untuk daftar perintah.',
         ]));
@@ -113,7 +113,7 @@ final class InboundRouter
         $subscription->opted_out_at = null;
         $subscription->consecutive_failures = 0;
         $subscription->save();
-        $this->sender->send($subscription, 'system', 'Ringkasan pagi aktif lagi mulai besok pukul 06.00 WITA.');
+        $this->sender->send($subscription, 'system', 'Ringkasan pagi aktif lagi mulai besok pukul 07.00 WITA.');
     }
 
     private function forget(WhatsappSubscription $subscription): void
