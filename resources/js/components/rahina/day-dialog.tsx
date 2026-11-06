@@ -129,14 +129,65 @@ export function DayDialog({
 
 function Loading() {
     return (
-        <div aria-live="polite" className="flex flex-col gap-3">
-            <p className="text-abu-600">{id.detail.loading}</p>
-            {[0, 1, 2].map((i) => (
-                <div
-                    key={i}
-                    className="h-6 rounded-sm bg-[repeating-linear-gradient(90deg,var(--color-abu-200)_0_12px,transparent_12px_16px)] opacity-60"
-                />
-            ))}
+        <div
+            aria-live="polite"
+            className="flex flex-col gap-4 rounded-xl border border-abu-200 bg-kertas p-4 sm:flex-row sm:items-start sm:gap-5"
+        >
+            <img
+                src="/assets/images/maskots/waiting.png"
+                alt="Menyusun ringkasan"
+                width={80}
+                height={80}
+                loading="eager"
+                decoding="sync"
+                className="size-16 shrink-0 self-center object-contain sm:size-20 sm:self-start"
+            />
+            <div className="flex flex-1 flex-col gap-2.5">
+                <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-semibold text-mangsi">
+                        {id.detail.loading}
+                    </p>
+                    <span
+                        className="flex h-3.5 items-end gap-1"
+                        aria-hidden="true"
+                    >
+                        <span
+                            className="h-full w-1 rounded-full bg-nila animate-wave-bar"
+                            style={{ animationDelay: '0ms' }}
+                        />
+                        <span
+                            className="h-full w-1 rounded-full bg-kunyit animate-wave-bar"
+                            style={{ animationDelay: '150ms' }}
+                        />
+                        <span
+                            className="h-full w-1 rounded-full bg-nila animate-wave-bar"
+                            style={{ animationDelay: '300ms' }}
+                        />
+                        <span
+                            className="h-full w-1 rounded-full bg-kunyit animate-wave-bar"
+                            style={{ animationDelay: '450ms' }}
+                        />
+                    </span>
+                </div>
+                <p className="text-xs text-abu-600">
+                    Membaca wewaran, sasih, wuku, dan menyusun ringkasan rahinan...
+                </p>
+                <div className="flex flex-col gap-2 pt-1" aria-hidden="true">
+                    <div className="h-4.5 w-4/5 rounded-md animate-shimmer-wave" />
+                    <div
+                        className="h-3.5 w-full rounded-md animate-shimmer-wave"
+                        style={{ animationDelay: '150ms' }}
+                    />
+                    <div
+                        className="h-3.5 w-11/12 rounded-md animate-shimmer-wave"
+                        style={{ animationDelay: '300ms' }}
+                    />
+                    <div
+                        className="h-3.5 w-3/4 rounded-md animate-shimmer-wave"
+                        style={{ animationDelay: '450ms' }}
+                    />
+                </div>
+            </div>
         </div>
     );
 }
@@ -148,9 +199,16 @@ function Detail({ detail }: { detail: DayDetail }) {
     return (
         <>
             <section aria-labelledby="ringkasan">
-                <h2 id="ringkasan" className="text-lg font-bold">
-                    {t.summaryHeading}
-                </h2>
+                <div className="flex items-center gap-2.5">
+                    <img
+                        src="/assets/images/logo_rahina.png"
+                        alt="Maskot Rahina"
+                        className="size-7 shrink-0 object-contain"
+                    />
+                    <h2 id="ringkasan" className="text-lg font-bold">
+                        {t.summaryHeading}
+                    </h2>
+                </div>
                 {brief !== null && (
                     <>
                         <p className="mt-2 font-display text-lg leading-6 font-semibold">
@@ -312,7 +370,7 @@ function Detail({ detail }: { detail: DayDetail }) {
             </section>
 
             <p className="text-[13px] leading-[18px] text-abu-600">
-                {t.engine}: {day.engine} · {id.disclaimer}
+                {id.disclaimer}
             </p>
         </>
     );

@@ -5,7 +5,7 @@ import type { KeyboardEvent } from 'react';
 import { DayCell } from '@/components/rahina/day-cell';
 import { DayDialog } from '@/components/rahina/day-dialog';
 import { MoonFull, MoonNew } from '@/components/rahina/moon-phase';
-import { SiteNav } from '@/components/rahina/site-nav';
+import { RahinaHeader } from '@/components/rahina/rahina-header';
 import { TodayPanel } from '@/components/rahina/today-panel';
 import { id } from '@/lang/id';
 import { cn } from '@/lib/utils';
@@ -88,14 +88,7 @@ export default function Calendar({
         <div className="min-h-screen bg-lontar font-sans text-mangsi">
             <Head title={id.calendar.title} />
 
-            <header className="border-b border-abu-200 bg-kertas">
-                <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-                    <span className="font-display text-[22px] leading-7 font-semibold">
-                        {id.appName}
-                    </span>
-                    <SiteNav current="calendar" />
-                </div>
-            </header>
+            <RahinaHeader current="calendar" />
 
             <main className="mx-auto grid max-w-6xl gap-6 px-4 py-6 lg:grid-cols-[320px_1fr]">
                 <div className="order-2 lg:order-1">

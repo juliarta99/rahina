@@ -4,9 +4,12 @@ import {
     BookOpen,
     CloudSlash,
     FlowerLotus,
+    Heart,
     HouseLine,
+    Info,
     PaperPlaneRight,
     Plant,
+    Sparkle,
     Storefront,
 } from '@phosphor-icons/react';
 import type { Icon } from '@phosphor-icons/react';
@@ -15,7 +18,7 @@ import type { FormEvent, KeyboardEvent } from 'react';
 import { CulturalNotice } from '@/components/rahina/cultural-notice';
 import { DateRefCard } from '@/components/rahina/date-ref-card';
 import { DayDialog } from '@/components/rahina/day-dialog';
-import { SiteNav } from '@/components/rahina/site-nav';
+import { RahinaHeader } from '@/components/rahina/rahina-header';
 import { id } from '@/lang/id';
 import { store as askStore } from '@/routes/ask';
 import type { AgentAnswer, AskPageProps } from '@/types/rahina';
@@ -30,6 +33,8 @@ const SUGGESTION_ICONS: Record<string, Icon> = {
     pertanian: Plant,
     dagang: Storefront,
     pembangunan: HouseLine,
+    jodoh: Heart,
+    bintang: Sparkle,
     upacara: FlowerLotus,
 };
 
@@ -66,6 +71,20 @@ export default function Ask(_props: AskPageProps) {
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }, [messages, pending, error]);
+
+    useEffect(() => {
+        // Preload seluruh aset maskot di memori browser agar ter-render instan tanpa jeda saat bertanya
+        const preloadList = [
+            '/assets/images/maskots/waiting.png',
+            '/assets/images/maskots/success.png',
+            '/assets/images/maskots/choose.png',
+            '/assets/images/maskots/om.png',
+        ];
+        preloadList.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+        });
+    }, []);
 
     const send = async (question: string, category: string | null = null) => {
         const text = question.trim();
@@ -144,29 +163,44 @@ export default function Ask(_props: AskPageProps) {
 
     return (
         <div className="min-h-screen bg-lontar font-sans text-mangsi">
-            <Head title={id.ask.title} />
+            <Head title={id.ask.title}>
+                <link rel="preload" as="image" href="/assets/images/maskots/waiting.png" />
+                <link rel="preload" as="image" href="/assets/images/maskots/success.png" />
+                <link rel="preload" as="image" href="/assets/images/maskots/choose.png" />
+            </Head>
 
-            <header className="border-b border-abu-200 bg-kertas">
-                <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-                    <span className="font-display text-[22px] leading-7 font-semibold">
-                        {id.appName}
-                    </span>
-                    <SiteNav current="ask" />
-                </div>
-            </header>
+            <RahinaHeader current="ask" />
 
             <main className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6">
                 <section
                     aria-labelledby="judul-tanya"
-                    className="flex flex-col gap-3"
+                    className="flex flex-col gap-4 rounded-xl border border-abu-200 bg-kertas p-5 sm:flex-row sm:items-center sm:gap-5"
                 >
-                    <h1
-                        id="judul-tanya"
-                        className="font-display text-[28px] leading-[34px] font-bold"
-                    >
-                        {id.ask.title}
-                    </h1>
-                    <p className="text-abu-600">{id.ask.intro}</p>
+                    <img
+                        src="/assets/images/maskots/om.png"
+                        alt="Maskot Tanya Wariga"
+                        className="size-20 shrink-0 self-center object-contain drop-shadow-sm sm:size-24 sm:self-start"
+                    />
+                    <div className="flex flex-col gap-1 text-center sm:text-left">
+                        <div className="flex items-center justify-center gap-2 sm:justify-start">
+                            <span className="rounded-full bg-kunyit px-2.5 py-0.5 text-xs font-semibold text-mangsi">
+                                Asisten Wariga
+                            </span>
+                        </div>
+                        <h1
+                            id="judul-tanya"
+                            className="font-display text-[26px] leading-[32px] font-bold sm:text-[28px] sm:leading-[34px]"
+                        >
+                            {id.ask.title}
+                        </h1>
+                        <p className="text-[15px] leading-relaxed text-abu-600">
+                            {id.ask.intro}
+                        </p>
+                        <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-nila sm:justify-start">
+                            <Info size={14} className="shrink-0" aria-hidden="true" />
+                            <span>{id.culturalNotice}</span>
+                        </p>
+                    </div>
                 </section>
 
                 {messages.length === 0 && pending === null && (
@@ -292,20 +326,74 @@ export default function Ask(_props: AskPageProps) {
             </footer>
 
             <DayDialog date={selected} onClose={() => setSelected(null)} />
+
+            {/* Hidden preloaded DOM images agar instan di cache grafis browser */}
+            <div className="hidden" aria-hidden="true">
+                <img src="/assets/images/maskots/waiting.png" alt="" loading="eager" decoding="sync" />
+                <img src="/assets/images/maskots/success.png" alt="" loading="eager" decoding="sync" />
+                <img src="/assets/images/maskots/choose.png" alt="" loading="eager" decoding="sync" />
+            </div>
         </div>
     );
 }
 
 function Working() {
     return (
-        <div aria-busy="true" className="flex flex-col gap-3">
-            <p className="text-abu-600">{id.ask.working}</p>
-            {[0, 1].map((i) => (
-                <div
-                    key={i}
-                    className="h-24 rounded-lg border border-abu-200 bg-[repeating-linear-gradient(90deg,var(--color-abu-200)_0_12px,transparent_12px_16px)] opacity-40"
-                />
-            ))}
+        <div
+            aria-busy="true"
+            className="flex max-w-[92%] items-start gap-3.5 self-start rounded-xl border border-abu-200 bg-kertas p-4 text-mangsi sm:max-w-[85%] sm:gap-4 sm:p-5"
+        >
+            <img
+                src="/assets/images/maskots/waiting.png"
+                alt="Maskot sedang menyusun jawaban"
+                width={56}
+                height={56}
+                loading="eager"
+                decoding="sync"
+                className="size-12 shrink-0 object-contain sm:size-14"
+            />
+            <div className="flex flex-1 flex-col gap-2">
+                <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-semibold text-mangsi">
+                        {id.ask.working}
+                    </p>
+                    <span
+                        className="flex h-3.5 items-end gap-1"
+                        aria-hidden="true"
+                    >
+                        <span
+                            className="h-full w-1 rounded-full bg-nila animate-wave-bar"
+                            style={{ animationDelay: '0ms' }}
+                        />
+                        <span
+                            className="h-full w-1 rounded-full bg-kunyit animate-wave-bar"
+                            style={{ animationDelay: '150ms' }}
+                        />
+                        <span
+                            className="h-full w-1 rounded-full bg-nila animate-wave-bar"
+                            style={{ animationDelay: '300ms' }}
+                        />
+                        <span
+                            className="h-full w-1 rounded-full bg-kunyit animate-wave-bar"
+                            style={{ animationDelay: '450ms' }}
+                        />
+                    </span>
+                </div>
+                <p className="text-xs text-abu-600">
+                    Menghitung wewaran, memadukan dewasa ayu, dan menelaah kearifan wariga...
+                </p>
+                <div className="flex flex-col gap-2 pt-1" aria-hidden="true">
+                    <div className="h-4 w-3/4 rounded-md animate-shimmer-wave" />
+                    <div
+                        className="h-3.5 w-full rounded-md animate-shimmer-wave"
+                        style={{ animationDelay: '150ms' }}
+                    />
+                    <div
+                        className="h-3.5 w-5/6 rounded-md animate-shimmer-wave"
+                        style={{ animationDelay: '300ms' }}
+                    />
+                </div>
+            </div>
         </div>
     );
 }
@@ -322,30 +410,49 @@ function AnswerBubble({
     onChoose: (code: string) => void;
 }) {
     const t = id.ask;
+    const avatarSrc =
+        answer.dates.length > 0
+            ? '/assets/images/maskots/success.png'
+            : answer.needs_clarification
+              ? '/assets/images/maskots/choose.png'
+              : '/assets/images/maskots/om.png';
 
     return (
-        <div className="flex max-w-full flex-col gap-3 self-start rounded-lg border border-abu-200 bg-kertas p-4 sm:max-w-[90%]">
-            <p className="text-[18px] leading-7">{answer.answer}</p>
+        <div className="flex max-w-full items-start gap-2.5 self-start sm:max-w-[90%] sm:gap-3">
+            <img
+                src={avatarSrc}
+                alt="Avatar Tanya Wariga"
+                className="mt-1 size-12 shrink-0 object-contain sm:size-20"
+            />
+            <div className="flex flex-1 flex-col gap-3 rounded-lg border border-abu-200 bg-kertas p-4">
+                <p className="text-[17px] leading-7 sm:text-[18px]">{answer.answer}</p>
 
-            {answer.needs_clarification &&
-                answer.clarification_options.length > 0 && (
-                    <div className="flex flex-col gap-2">
-                        <p className="text-sm font-medium">{t.clarifyLabel}</p>
-                        <div className="flex flex-wrap gap-2">
-                            {answer.clarification_options.map((o) => (
-                                <button
-                                    key={o.code}
-                                    type="button"
-                                    disabled={disabled}
-                                    onClick={() => onChoose(o.code)}
-                                    className="flex h-11 items-center rounded-sm border border-nila bg-kertas px-3 text-sm font-medium text-nila hover:bg-nila-100 focus-visible:outline-2 focus-visible:outline-nila disabled:opacity-60"
-                                >
-                                    {o.name}
-                                </button>
-                            ))}
+                {answer.needs_clarification &&
+                    answer.clarification_options.length > 0 && (
+                        <div className="flex flex-col gap-2 rounded-md bg-nila-100/60 p-3">
+                            <div className="flex items-center gap-2">
+                                <img
+                                    src="/assets/images/maskots/choose.png"
+                                    alt="Pilih opsi"
+                                    className="size-8 shrink-0 object-contain"
+                                />
+                                <p className="text-sm font-semibold text-mangsi">{t.clarifyLabel}</p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {answer.clarification_options.map((o) => (
+                                    <button
+                                        key={o.code}
+                                        type="button"
+                                        disabled={disabled}
+                                        onClick={() => onChoose(o.code)}
+                                        className="flex h-11 items-center rounded-sm border border-nila bg-kertas px-3 text-sm font-medium text-nila hover:bg-nila-100 focus-visible:outline-2 focus-visible:outline-nila disabled:opacity-60"
+                                    >
+                                        {o.name}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
             {answer.dates.length > 0 && (
                 <div className="flex flex-col gap-3">
@@ -385,6 +492,7 @@ function AnswerBubble({
                     </ol>
                 </details>
             )}
+            </div>
         </div>
     );
 }

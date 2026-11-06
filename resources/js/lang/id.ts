@@ -88,6 +88,7 @@ export const id = {
     } as Record<string, string>,
     nav: {
         label: 'Menu utama',
+        home: 'Beranda',
         calendar: 'Kalender',
         ask: 'Tanya Wariga',
         profile: 'Profil',
@@ -191,23 +192,25 @@ export const id = {
     },
     ask: {
         title: 'Tanya Wariga',
-        intro: 'Tanyakan hari baik untuk kegiatan Anda. Jawaban disusun dari data perhitungan wariga, lengkap dengan dewasa dan sumbernya.',
-        placeholder: 'Contoh: hari baik menanam cabai bulan Desember?',
+        intro: 'Tanyakan hari baik untuk beragam kegiatan Anda—seperti membuka usaha, pertanian, mendirikan bangunan, hingga upacara—serta telaah kearifan wariga (zodiak bintang Bali, garis hidup, dan perjodohan). Jawaban disusun dari data perhitungan wariga, lengkap dengan dewasa dan sumbernya.',
+        placeholder: 'Contoh: hari baik buka warung atau karakter kelahiran 15 Mei?',
         inputLabel: 'Pertanyaan',
         send: 'Tanya',
         working:
-            'Mencocokkan aktivitas dan mencari tanggal di data perhitungan wariga…',
+            'Mencocokkan aktivitas dan mencari data perhitungan wariga…',
         suggestionsLabel: 'Contoh pertanyaan',
         suggestions: [
-            { icon: 'pertanian', text: 'Hari baik menanam padi bulan ini' },
             {
                 icon: 'dagang',
                 text: 'Kapan hari baik buka warung bulan depan?',
             },
+            { icon: 'pertanian', text: 'Hari baik menanam padi bulan ini' },
             {
                 icon: 'pembangunan',
                 text: 'Hari baik mulai bangun rumah bulan Desember',
             },
+            { icon: 'jodoh', text: 'Kecocokan jodoh Minggu Pon dan Senin Kliwon' },
+            { icon: 'bintang', text: 'Karakter bintang kelahiran 15 Mei' },
             { icon: 'upacara', text: 'Hari baik pawiwahan awal tahun depan' },
         ],
         you: 'Anda',
@@ -225,7 +228,7 @@ export const id = {
         retry: 'Coba lagi',
         newChat: 'Mulai pertanyaan baru',
         privacy:
-            'Jangan menuliskan nama, nomor telepon, atau tanggal lahir. Pertanyaan hanya diproses untuk mencari jawaban dan tidak disimpan sebagai teks.',
+            'Pertanyaan hanya diproses untuk mencari jawaban dan tidak disimpan sebagai teks.',
     },
     culturalNotice:
         'Untuk upacara besar, mohon konsultasikan dewasa dengan sulinggih atau pemangku setempat.',

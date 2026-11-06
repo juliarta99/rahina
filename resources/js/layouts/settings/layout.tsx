@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { ArrowLeft, Key, User } from '@phosphor-icons/react';
 import type { PropsWithChildren } from 'react';
-import { SiteNav } from '@/components/rahina/site-nav';
+import { RahinaHeader } from '@/components/rahina/rahina-header';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { id } from '@/lang/id';
 import { cn, toUrl } from '@/lib/utils';
@@ -27,14 +27,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
     return (
         <div className="min-h-screen bg-lontar font-sans text-mangsi">
-            <header className="border-b border-abu-200 bg-kertas">
-                <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-                    <span className="font-display text-[22px] leading-7 font-semibold">
-                        {id.appName}
-                    </span>
-                    <SiteNav current="profile" />
-                </div>
-            </header>
+            <RahinaHeader current="profile" />
 
             <main className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6">
                 <div>

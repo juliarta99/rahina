@@ -42,7 +42,6 @@ export function DewasaRow({ dewasa }: { dewasa: DewasaItem }) {
                     {id.today.source}: {dewasa.source.title}
                     {dewasa.source.page !== null &&
                         `, ${id.today.page} ${dewasa.source.page}`}
-                    {!dewasa.is_validated && ` · ${id.today.unreviewed}`}
                 </p>
             </div>
         </li>

@@ -56,6 +56,22 @@ export function TodayPanel({
 
     return (
         <aside className="flex flex-col gap-5 rounded-lg border border-abu-200 bg-kertas p-5">
+            <div className="flex items-center gap-3 rounded-lg border border-nila/15 bg-nila-100/50 p-3">
+                <img
+                    src="/assets/images/maskots/halo.png"
+                    alt="Maskot Rahina"
+                    className="size-12 shrink-0 object-contain sm:size-14"
+                />
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold uppercase tracking-wider text-nila">
+                        Rahajeng Rahina
+                    </span>
+                    <span className="text-xs text-abu-600">
+                        Prakiraan dewasa ayu & kalender Bali hari ini
+                    </span>
+                </div>
+            </div>
+
             <div className="flex items-center justify-between">
                 <span className="rounded-sm bg-mangsi px-2 py-0.5 text-[13px] font-medium text-white">
                     {id.calendar.today}

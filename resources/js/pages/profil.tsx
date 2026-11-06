@@ -13,7 +13,7 @@ import {
 } from '@phosphor-icons/react';
 import { useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
-import { SiteNav } from '@/components/rahina/site-nav';
+import { RahinaHeader } from '@/components/rahina/rahina-header';
 import { id } from '@/lang/id';
 import { cn } from '@/lib/utils';
 import { logout } from '@/routes';
@@ -35,12 +35,23 @@ const button = {
     danger: 'inline-flex h-11 items-center justify-center gap-1.5 rounded-md bg-ala px-4 font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ala disabled:opacity-60 cursor-pointer',
 };
 
-function Card({ title, children }: { title: string; children: ReactNode }) {
+function Card({
+    title,
+    icon,
+    children,
+}: {
+    title: string;
+    icon?: ReactNode;
+    children: ReactNode;
+}) {
     return (
         <section className="flex flex-col gap-4 rounded-lg border border-abu-200 bg-kertas p-5">
-            <h2 className="font-display text-[22px] leading-7 font-semibold">
-                {title}
-            </h2>
+            <div className="flex items-center gap-3">
+                {icon}
+                <h2 className="font-display text-[22px] leading-7 font-semibold">
+                    {title}
+                </h2>
+            </div>
             {children}
         </section>
     );
@@ -73,14 +84,7 @@ export default function Profil({
         <div className="min-h-screen bg-lontar font-sans text-mangsi">
             <Head title={t.title} />
 
-            <header className="border-b border-abu-200 bg-kertas">
-                <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-                    <span className="font-display text-[22px] leading-7 font-semibold">
-                        {id.appName}
-                    </span>
-                    <SiteNav current="profile" />
-                </div>
-            </header>
+            <RahinaHeader current="profile" />
 
             <main className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6">
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -115,7 +119,20 @@ export default function Profil({
                     </p>
                 )}
 
-                <Card title={t.waTitle}>
+                <Card
+                    title={t.waTitle}
+                    icon={
+                        <img
+                            src={
+                                subscription?.status === 'active'
+                                    ? '/assets/images/maskots/success.png'
+                                    : '/assets/images/maskots/waiting.png'
+                            }
+                            alt="Maskot WhatsApp"
+                            className="size-8 object-contain"
+                        />
+                    }
+                >
                     <p className="text-abu-600">{t.waIntro(sendTime)}</p>
                     {subscription === null ? (
                         <EnableForm
@@ -150,7 +167,16 @@ export default function Profil({
                     </p>
                 </Card>
 
-                <Card title={t.account}>
+                <Card
+                    title={t.account}
+                    icon={
+                        <img
+                            src="/assets/images/logo_rahina.png"
+                            alt="Logo Rahina"
+                            className="size-8 object-contain"
+                        />
+                    }
+                >
                     <p>
                         <b>{auth.user?.name}</b>
                         <br />
