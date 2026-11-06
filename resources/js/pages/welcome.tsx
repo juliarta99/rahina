@@ -563,6 +563,42 @@ export default function Welcome({
                     </div>
                 </div>
             </footer>
+
+            {/* FLOATING WIDGET POJOK KANAN BAWAH: GEK INA */}
+            <aside
+                aria-label="Tanya Wariga bersama Gek Ina"
+                className="fixed bottom-5 right-5 z-40 sm:bottom-6 sm:right-6"
+            >
+                <Link
+                    href={ask.url()}
+                    className="group flex items-center gap-2.5 rounded-full border border-kunyit/50 bg-white/95 py-2 pl-2 pr-4 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-nila hover:bg-kunyit-100/50 hover:shadow-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nila"
+                >
+                    <div className="relative shrink-0">
+                        <img
+                            src="/assets/images/maskots/halo.png"
+                            alt="Maskot Gek Ina"
+                            width={52}
+                            height={52}
+                            className="size-11 object-contain drop-shadow-md transition-transform duration-300 group-hover:rotate-6 sm:size-13"
+                        />
+                        <span className="absolute -top-0.5 -right-0.5 flex size-3">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                            <span className="relative inline-flex size-3 rounded-full bg-emerald-500" />
+                        </span>
+                    </div>
+
+                    <div className="flex flex-col text-left">
+                        <div className="flex items-center gap-1.5">
+                            <span className="font-display text-sm font-bold text-nila sm:text-base">
+                                Gek Ina
+                            </span>
+                        </div>
+                        <span className="text-[11px] leading-tight text-abu-600 sm:text-xs">
+                            Tanya Wariga di sini
+                        </span>
+                    </div>
+                </Link>
+            </aside>
         </div>
     );
 }
