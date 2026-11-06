@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { id } from '@/lang/id';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 
@@ -13,10 +14,13 @@ type Props = {
     passwordRules: string;
 };
 
+/** Daftar dengan nama + nomor HP + kata sandi. Nomor yang sama dipakai untuk Rahina Pagi via WhatsApp. */
 export default function Register({ passwordRules }: Props) {
+    const t = id.auth;
+
     return (
         <>
-            <Head title="Register" />
+            <Head title={t.registerTitle} />
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
@@ -27,7 +31,7 @@ export default function Register({ passwordRules }: Props) {
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">{t.name}</Label>
                                 <Input
                                     id="name"
                                     type="text"
@@ -36,7 +40,7 @@ export default function Register({ passwordRules }: Props) {
                                     tabIndex={1}
                                     autoComplete="name"
                                     name="name"
-                                    placeholder="Full name"
+                                    placeholder={t.namePlaceholder}
                                 />
                                 <InputError
                                     message={errors.name}
@@ -45,28 +49,36 @@ export default function Register({ passwordRules }: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="phone">{t.phone}</Label>
                                 <Input
-                                    id="email"
-                                    type="email"
+                                    id="phone"
+                                    type="tel"
+                                    inputMode="tel"
                                     required
                                     tabIndex={2}
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
+                                    autoComplete="tel"
+                                    name="phone"
+                                    placeholder={t.phonePlaceholder}
+                                    aria-describedby="phone-hint"
                                 />
-                                <InputError message={errors.email} />
+                                <p
+                                    id="phone-hint"
+                                    className="text-[13px] leading-[18px] text-abu-600"
+                                >
+                                    {t.phoneHint}
+                                </p>
+                                <InputError message={errors.phone} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
+                                <Label htmlFor="password">{t.password}</Label>
                                 <PasswordInput
                                     id="password"
                                     required
                                     tabIndex={3}
                                     autoComplete="new-password"
                                     name="password"
-                                    placeholder="Password"
+                                    placeholder={t.password}
                                     passwordrules={passwordRules}
                                 />
                                 <InputError message={errors.password} />
@@ -74,7 +86,7 @@ export default function Register({ passwordRules }: Props) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password_confirmation">
-                                    Confirm password
+                                    {t.passwordConfirm}
                                 </Label>
                                 <PasswordInput
                                     id="password_confirmation"
@@ -82,7 +94,7 @@ export default function Register({ passwordRules }: Props) {
                                     tabIndex={4}
                                     autoComplete="new-password"
                                     name="password_confirmation"
-                                    placeholder="Confirm password"
+                                    placeholder={t.passwordConfirm}
                                     passwordrules={passwordRules}
                                 />
                                 <InputError
@@ -92,19 +104,19 @@ export default function Register({ passwordRules }: Props) {
 
                             <Button
                                 type="submit"
-                                className="mt-2 w-full"
+                                className="mt-2 h-11 w-full"
                                 tabIndex={5}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
-                                Create account
+                                {t.registerButton}
                             </Button>
                         </div>
 
-                        <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
+                        <div className="text-center text-sm text-abu-600">
+                            {t.haveAccount}{' '}
                             <TextLink href={login()} tabIndex={6}>
-                                Log in
+                                {t.loginLink}
                             </TextLink>
                         </div>
                     </>
@@ -115,6 +127,6 @@ export default function Register({ passwordRules }: Props) {
 }
 
 Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
+    title: id.auth.registerHeading,
+    description: id.auth.registerDescription,
 };

@@ -1,5 +1,10 @@
 import { Form } from '@inertiajs/react';
-import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-react';
+import {
+    Eye,
+    EyeSlash as EyeOff,
+    LockKey as LockKeyhole,
+    ArrowsClockwise as RefreshCw,
+} from '@phosphor-icons/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import AlertError from '@/components/alert-error';
 import { Button } from '@/components/ui/button';
