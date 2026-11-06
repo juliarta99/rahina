@@ -17,6 +17,18 @@ Route::get('/hari/{date}', DayDetailController::class)
 Route::get('/tanya', [AskController::class, 'show'])->name('ask');
 Route::post('/tanya', [AskController::class, 'store'])->name('ask.store');
 
+Route::get('/tentang', fn () => inertia('about'))->name('about');
+Route::get('/tentang-kami', fn () => redirect()->route('about'));
+Route::get('/kebijakan-privasi', fn () => inertia('privacy'))->name('privacy');
+Route::get('/syarat-ketentuan', fn () => inertia('terms'))->name('terms');
+
+// Pratinjau halaman error kustom (404, 500, 403, 503)
+Route::get('/error/{code}', function (int $code = 404) {
+    abort_if(! in_array($code, [404, 500, 403, 503], true), 404);
+
+    return inertia('error', ['status' => $code]);
+})->name('error.preview');
+
 Route::post('/webhooks/fonnte/{secret}', FonnteWebhookController::class)
     ->middleware('throttle:120,1')
     ->name('webhooks.fonnte');
